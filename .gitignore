@@ -6,6 +6,7 @@
 /..config.tmp
 /.config
 *.depend
+*.DS_Store
 *.o
 /*.patch
 /*.diff
