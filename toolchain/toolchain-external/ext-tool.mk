@@ -279,6 +279,9 @@ TOOLCHAIN_EXTERNAL_SOURCE=gcc-linaro-aarch64-linux-gnu-4.7-2013.02-01-20130221_l
 else ifeq ($(BR2_TOOLCHAIN_EXTERNAL_LINARO_AARCH64_13_03),y)
 TOOLCHAIN_EXTERNAL_SITE=https://releases.linaro.org/13.03/components/toolchain/binaries/
 TOOLCHAIN_EXTERNAL_SOURCE=gcc-linaro-aarch64-linux-gnu-4.7-2013.03-20130313_linux.tar.xz
+else ifeq ($(BR2_TOOLCHAIN_EXTERNAL_RPI_ARM),y)
+TOOLCHAIN_EXTERNAL_SITE=http://www.metrological.com/rpi/
+TOOLCHAIN_EXTERNAL_SOURCE=arm-raspberrypi-linux-gnueabi_$(HOSTARCH)_gcc4.7.2.tar.gz
 else
 # Custom toolchain
 TOOLCHAIN_EXTERNAL_SITE=$(dir $(call qstrip,$(BR2_TOOLCHAIN_EXTERNAL_URL)))

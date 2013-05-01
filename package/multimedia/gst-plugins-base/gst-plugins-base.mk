@@ -3,10 +3,14 @@
 # gst-plugins-base
 #
 #############################################################
-GST_PLUGINS_BASE_VERSION = 0.10.36
-GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VERSION).tar.bz2
-GST_PLUGINS_BASE_SITE = http://gstreamer.freedesktop.org/src/gst-plugins-base
+GST_PLUGINS_BASE_VERSION = c1961761a7f30d5e660cd46c096e0b288acce950
+GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VERSION).tar.gz
+GST_PLUGINS_BASE_SITE = http://cgit.freedesktop.org/gstreamer-sdk/gst-plugins-base/snapshot/
 GST_PLUGINS_BASE_INSTALL_STAGING = YES
+GST_PLUGINS_BASE_AUTORECONF = YES
+
+GST_PLUGINS_BASE_POST_DOWNLOAD_HOOKS += GSTREAMER_COMMON_DOWNLOAD
+GST_PLUGINS_BASE_POST_EXTRACT_HOOKS += GSTREAMER_COMMON_EXTRACT
 
 # freetype is only used by examples, but if it is not found
 # and the host has a freetype-config script, then the host

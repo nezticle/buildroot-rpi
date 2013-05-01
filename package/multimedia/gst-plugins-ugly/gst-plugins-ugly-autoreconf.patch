@@ -1,0 +1,29 @@
+--- a/configure.ac	2012-11-15 14:34:11.000000000 +0100
++++ b/configure.ac	2013-04-30 14:46:39.206480443 +0200
+@@ -477,7 +477,6 @@
+ tests/Makefile
+ tests/check/Makefile
+ m4/Makefile
+-po/Makefile.in
+ pkgconfig/Makefile
+ pkgconfig/gstreamer-plugins-ugly-uninstalled.pc
+ gst-plugins-ugly.spec
+--- a/Makefile.am	2012-11-15 14:34:11.000000000 +0100
++++ b/Makefile.am	2013-04-30 14:46:54.838473619 +0200
+@@ -1,7 +1,7 @@
+ DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
+ 
+ SUBDIRS = \
+-	gst-libs gst ext docs m4 tests common pkgconfig po
++	gst-libs gst ext docs m4 tests common pkgconfig
+ 
+ # include before EXTRA_DIST for win32 assignment
+ include $(top_srcdir)/common/win32.mak
+@@ -18,7 +18,6 @@
+ ACLOCAL_AMFLAGS = -I m4 -I common/m4
+ 
+ include $(top_srcdir)/common/release.mak
+-include $(top_srcdir)/common/po.mak
+ 
+ check-valgrind:
+ 	cd tests/check && make check-valgrind

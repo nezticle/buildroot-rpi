@@ -1,0 +1,28 @@
+--- a/configure.ac	2013-04-30 10:24:39.000000000 +0200
++++ b/configure.ac	2013-04-30 14:29:53.234433312 +0200
+@@ -1215,7 +1215,6 @@
+ sys/v4l2/Makefile
+ sys/waveform/Makefile
+ sys/ximage/Makefile
+-po/Makefile.in
+ tests/Makefile
+ tests/check/Makefile
+ tests/examples/Makefile
+--- a/Makefile.am	2013-04-30 10:24:39.000000000 +0200
++++ b/Makefile.am	2013-04-30 14:30:05.938440128 +0200
+@@ -10,7 +10,6 @@
+ 	gst sys ext 		\
+ 	tests			\
+ 	docs			\
+-	po			\
+ 	common			\
+ 	m4			\
+ 	pkgconfig
+@@ -43,7 +42,6 @@
+ ACLOCAL_AMFLAGS = -I m4 -I common/m4
+ 
+ include $(top_srcdir)/common/release.mak
+-include $(top_srcdir)/common/po.mak
+ 
+ check-valgrind:
+ 	cd tests/check && make check-valgrind

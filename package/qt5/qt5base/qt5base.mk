@@ -25,11 +25,16 @@ QT5BASE_CONFIGURE_OPTS += \
 	-no-nis \
 	-no-libudev \
 	-no-iconv \
-	-no-gstreamer \
 	-no-gtkstyle \
 	-system-zlib \
 	-system-pcre \
 	-no-pch
+
+ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
+QT5BASE_DEPENDENCIES += gst-omx
+else
+QT5BASE_CONFIGURE_OPTS += -no-gstreamer
+endif
 
 ifeq ($(BR2_ENABLE_DEBUG),y)
 QT5BASE_CONFIGURE_OPTS += -debug

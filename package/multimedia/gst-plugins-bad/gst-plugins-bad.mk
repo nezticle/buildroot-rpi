@@ -3,9 +3,13 @@
 # gst-plugins-bad
 #
 #############################################################
-GST_PLUGINS_BAD_VERSION = 0.10.23
-GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VERSION).tar.bz2
-GST_PLUGINS_BAD_SITE = http://gstreamer.freedesktop.org/src/gst-plugins-bad
+GST_PLUGINS_BAD_VERSION = 7138cc5deab2d6a3cf63e4402d350f6af4963e58
+GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VERSION).tar.gz
+GST_PLUGINS_BAD_SITE = http://cgit.freedesktop.org/gstreamer-sdk/gst-plugins-bad/snapshot/
+GST_PLUGINS_BAD_AUTORECONF = YES
+
+GST_PLUGINS_BAD_POST_DOWNLOAD_HOOKS += GSTREAMER_COMMON_DOWNLOAD
+GST_PLUGINS_BAD_POST_EXTRACT_HOOKS += GSTREAMER_COMMON_EXTRACT
 
 GST_PLUGINS_BAD_CONF_OPT = \
 		--disable-examples
@@ -14,6 +18,13 @@ GST_PLUGINS_BAD_DEPENDENCIES = gst-plugins-base gstreamer
 
 ifeq ($(BR2_PACKAGE_ORC),y)
 GST_PLUGINS_BAD_DEPENDENCIES += orc
+endif
+
+ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
+GST_PLUGINS_BAD_DEPENDENCIES += rpi-userland
+GST_PLUGINS_BAD_CONF_OPT += --with-egl-window-system=rpi
+GST_PLUGINS_BAD_CONF_OPT += --enable-eglgles
+GST_PLUGINS_BAD_CONF_ENV += CPPFLAGS="$(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include/interface/vcos/pthreads -I$(STAGING_DIR)/usr/include/interface/vmcs_host/linux"
 endif
 
 ifeq ($(BR2_PACKAGE_GST_PLUGINS_BAD_PLUGIN_ADPCMDEC),y)

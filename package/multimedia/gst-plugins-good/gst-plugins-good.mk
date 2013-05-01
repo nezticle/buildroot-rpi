@@ -3,9 +3,13 @@
 # gst-plugins-good
 #
 #############################################################
-GST_PLUGINS_GOOD_VERSION = 0.10.31
-GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VERSION).tar.bz2
-GST_PLUGINS_GOOD_SITE = http://gstreamer.freedesktop.org/src/gst-plugins-good
+GST_PLUGINS_GOOD_VERSION = 7e9814f644d599c80a8bb4b556bc4a2dd107b79d
+GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VERSION).tar.gz
+GST_PLUGINS_GOOD_SITE = http://cgit.freedesktop.org/gstreamer-sdk/gst-plugins-good/snapshot/
+GST_PLUGINS_GOOD_AUTORECONF = YES
+
+GST_PLUGINS_GOOD_POST_DOWNLOAD_HOOKS += GSTREAMER_COMMON_DOWNLOAD
+GST_PLUGINS_GOOD_POST_EXTRACT_HOOKS += GSTREAMER_COMMON_EXTRACT
 
 GST_PLUGINS_GOOD_CONF_OPT = \
 		--disable-debug \

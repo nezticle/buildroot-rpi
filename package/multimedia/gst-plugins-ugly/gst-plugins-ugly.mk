@@ -3,9 +3,13 @@
 # gst-plugins-ugly
 #
 #############################################################
-GST_PLUGINS_UGLY_VERSION = 0.10.19
-GST_PLUGINS_UGLY_SOURCE = gst-plugins-ugly-$(GST_PLUGINS_UGLY_VERSION).tar.bz2
-GST_PLUGINS_UGLY_SITE = http://gstreamer.freedesktop.org/src/gst-plugins-ugly
+GST_PLUGINS_UGLY_VERSION = d637756a8e569753e9869c2c0728288f5dbc5089
+GST_PLUGINS_UGLY_SOURCE = gst-plugins-ugly-$(GST_PLUGINS_UGLY_VERSION).tar.gz
+GST_PLUGINS_UGLY_SITE = http://cgit.freedesktop.org/gstreamer-sdk/gst-plugins-ugly/snapshot/
+GST_PLUGINS_UGLY_AUTORECONF = YES
+
+GST_PLUGINS_UGLY_POST_DOWNLOAD_HOOKS += GSTREAMER_COMMON_DOWNLOAD
+GST_PLUGINS_UGLY_POST_EXTRACT_HOOKS += GSTREAMER_COMMON_EXTRACT
 
 GST_PLUGINS_UGLY_CONF_OPT = \
 		--disable-examples

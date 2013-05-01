@@ -1,0 +1,53 @@
+--- a/configure.ac	2013-02-20 15:13:23.000000000 +0100
++++ b/configure.ac	2013-04-30 13:57:05.594363346 +0200
+@@ -781,7 +781,6 @@
+ plugins/Makefile
+ plugins/indexers/Makefile
+ plugins/elements/Makefile
+-po/Makefile.in
+ tests/Makefile
+ tests/benchmarks/Makefile
+ tests/check/Makefile
+--- a/Makefile.am	2013-02-20 15:13:23.000000000 +0100
++++ b/Makefile.am	2013-04-30 13:57:07.278354341 +0200
+@@ -9,7 +9,6 @@
+ SUBDIRS = pkgconfig \
+ 	gst libs plugins tools tests \
+ 	docs \
+-	po \
+ 	m4 \
+ 	common
+ 
+@@ -17,7 +16,6 @@
+ DIST_SUBDIRS = pkgconfig \
+ 	gst libs plugins tools tests \
+ 	docs \
+-	po \
+ 	m4 \
+ 	common
+ 
+@@ -28,7 +26,7 @@
+ 	gstreamer.spec gstreamer.spec.in \
+ 	gst-element-check.m4.in \
+ 	configure.ac autogen.sh depcomp \
+-	MAINTAINERS ABOUT-NLS RELEASE gstreamer.doap \
++	MAINTAINERS RELEASE gstreamer.doap \
+ 	scripts/gst-uninstalled \
+ 	$(win32)
+ 
+@@ -37,7 +35,6 @@
+ DISTCLEANFILES = _stdint.h
+ 
+ include $(top_srcdir)/common/release.mak
+-include $(top_srcdir)/common/po.mak
+ 
+ if GST_GCOV_ENABLED
+ clean-gcov:
+@@ -184,7 +181,6 @@
+ 	$(top_builddir)/common/m4/ltversion.m4 \
+ 	$(top_builddir)/common/m4/lt~obsolete.m4 \
+ 	$(top_builddir)/common/m4/nls.m4 \
+-	$(top_builddir)/common/m4/po.m4 \
+ 	$(top_builddir)/common/m4/printf-posix.m4 \
+ 	$(top_builddir)/common/m4/progtest.m4 \
+ 	$(top_builddir)/common/m4/size_max.m4 \
