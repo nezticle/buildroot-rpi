@@ -1,0 +1,13 @@
+config BR2_PACKAGE_LIBCEC
+	select BR2_PACKAGE_LOCKDEV
+	bool "libcec"
+	help
+		hdmi cec library.
+
+		 https://github.com/Pulse-Eight/libcec
+
+config BR2_PACKAGE_LIBCEC_RPI
+	bool "libcec-rpi"
+	depends on BR2_PACKAGE_LIBCEC
+	depends on BR2_PACKAGE_RPI_USERLAND
+	default y

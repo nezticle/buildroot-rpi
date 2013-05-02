@@ -602,6 +602,10 @@ source "package/schifra/Config.in"
 source "package/startup-notification/Config.in"
 source "package/liblog4c-localtime/Config.in"
 source "package/tzdata/Config.in"
+source "package/lockdev/Config.in"
+source "package/libcec/Config.in"
+source "package/libcec-uinput/Config.in"
+source "package/log4cplus/Config.in"
 endmenu
 
 menu "Text and terminal handling"
