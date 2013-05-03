@@ -1,7 +1,7 @@
 OMXPLAYER_VERSION = fcfb7911af3b81c84e1da920018fb9e2ae24d57e
 OMXPLAYER_SITE = git://github.com/huceke/omxplayer.git
 OMXPLAYER_SITE_METHOD = git
-OMXPLAYER_DEPENDENCIES = ffmpeg freetype boost pcre liberation
+OMXPLAYER_DEPENDENCIES = ffmpeg freetype boost pcre rpi-userland
 
 OMXPLAYER_CONFIG_ENV = \
 	BUILDROOT=$(TOPDIR) \
@@ -35,11 +35,14 @@ endef
 define OMXPLAYER_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 $(@D)/omxplayer.bin $(TARGET_DIR)/usr/bin/omxplayer.bin
 	$(INSTALL) -m 755 $(@D)/omxplayer $(TARGET_DIR)/usr/bin/omxplayer
+	mkdir -p $(TARGET_DIR)/usr/share/fonts/
+	$(INSTALL) -m 644 $(@D)/fonts/FreeSans.ttf $(TARGET_DIR)/usr/share/fonts/
 endef
 
 define OMXPLAYER_UNINSTALL_TARGET_CMDS
 	-rm $(TARGET_DIR)/usr/bin/omxplayer.bin
 	-rm $(TARGET_DIR)/usr/bin/omxplayer
+	-rm $(TARGET_DIR)/usr/share/fonts/FreeSans.ttf
 endef
 
 $(eval $(generic-package))

@@ -1,0 +1,4 @@
+config BR2_PACKAGE_LOG4CPLUS
+	bool "log4cplus"
+	help
+	  C++ port for Log for Java (log4j)
