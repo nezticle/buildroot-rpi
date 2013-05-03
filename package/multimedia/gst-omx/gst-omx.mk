@@ -38,6 +38,7 @@ define GST_OMX_RUN_AUTOCONF
 		AUTOHEADER=$(AUTOHEADER) \
 		AUTOCONF=$(AUTOCONF) \
 		AUTOMAKE=$(AUTOMAKE) \
+		AUTOM4TE=$(HOST_DIR)/usr/bin/autom4te \
 		NOCONFIGURE=1 \
 		./autogen.sh --nocheck)
 endef
