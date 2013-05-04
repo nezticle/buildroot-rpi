@@ -17,6 +17,9 @@ define RPI_FIRMWARE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/boot/fixup_cd.dat $(BINARIES_DIR)/rpi-firmware/fixup_cd.dat
 	$(INSTALL) -D -m 0644 package/rpi-firmware/config.txt $(BINARIES_DIR)/rpi-firmware/config.txt
 	cd $(TARGET_DIR)/lib; rm -f ld-linux-armhf.so.3; ln -s ld-linux.so.3 ld-linux-armhf.so.3
+	mkdir -p $(TARGET_DIR)/boot
+	grep -q '^/dev/mmcblk0p1' $(TARGET_DIR)/etc/fstab || \
+		echo -e '/dev/mmcblk0p1 /boot vfat defaults 0 0' >> $(TARGET_DIR)/etc/fstab
 endef
 
 $(eval $(generic-package))
