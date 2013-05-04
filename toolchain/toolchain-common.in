@@ -96,7 +96,7 @@ config BR2_USE_MMU
 
 config BR2_PREFER_SOFT_FLOAT
 	bool
-	default n if BR2_TOOLCHAIN_EXTERNAL_RPI_ARM
+	default n if BR2_arm1176jzf_s
 	default y if BR2_arm
 	default y if BR2_armeb
 	default y if BR2_avr32
