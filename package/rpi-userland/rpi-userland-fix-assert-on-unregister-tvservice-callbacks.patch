@@ -1,0 +1,11 @@
+--- a/interface/vmcs_host/vc_vchi_tvservice.c	2013-05-04 17:05:18.875314985 +0200
++++ b/interface/vmcs_host/vc_vchi_tvservice.c	2013-05-04 17:11:28.787328484 +0200
+@@ -427,7 +427,7 @@
+             done = 1;
+          } // if
+       } // for
+-      vcos_assert(done);
++//      vcos_assert(done);
+       tvservice_lock_release();
+    }
+ }
