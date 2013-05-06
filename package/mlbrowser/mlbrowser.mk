@@ -1,0 +1,35 @@
+# Metrological's example of a webkit (accelerated) browser
+
+MLBROWSER_VERSION=1.0
+MLBROWSER_SITE_METHOD=local
+MLBROWSER_SITE=$(TOPDIR)/package/mlbrowser/src
+MLBROWSER_DEPENDENCIES = qt gstreamer
+
+define MLBROWSER_CONFIGURE_CMDS
+	# 'clean' if Makefile exist
+	[ -f "$(@D)/Makefile" ] && $(MAKE) -C $(@D) distclean  || echo "Warning: nothing to clean, no Makefile found"
+
+        # run qmake
+	(cd $(@D) && $(HOST_DIR)/usr/bin/qmake )
+endef
+	
+define MLBROWSER_BUILD_CMDS
+        $(TARGET_MAKE_ENV) $(MAKE) -C $(@D)
+endef
+	
+define MLBROWSER_INSTALL_STAGING_CMDS
+	# 'install' is defined in *.pro
+        $(MAKE) -C $(@D) install
+endef
+	
+define MLBROWSER_INSTALL_TARGET_CMDS
+	# copy binary
+        cp -dpf $(@D)/mlbrowser $(TARGET_DIR)/usr/bin
+endef
+	
+define MLBROWSER_UNINSTALL_TARGET_CMDS
+	# 'clean' binary
+        rm $(TARGET_DIR)/usr/bin/mlbrowser
+endef
+	
+$(eval $(generic-package)) 

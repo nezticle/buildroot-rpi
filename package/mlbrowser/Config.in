@@ -1,0 +1,11 @@
+config BR2_PACKAGE_MLBROWSER
+	bool "mlbrowser"
+	depends on BR2_PACKAGE_QT_WEBKIT
+
+	help
+		Metrological's simple (accellerated) browser implementation
+		http://www.metrological.com
+		m.sieben@metrological.com
+
+comment "mlbrowser was developed for Qt4 QWS with WebKit"
+	depends on !BR2_PACKAGE_QT_WEBKIT
