@@ -5,7 +5,7 @@
 #############################################################
 #GST_OMX_VERSION = 28beb68797c6a260a37bedfa0c0d6026b3dd0a84
 #GST_OMX_SITE = http://cgit.freedesktop.org/gstreamer/gst-omx/snapshot/
-GST_OMX_VERSION = 6e499aad33236d266dc4a8aebd121a1dcf7c2eca
+GST_OMX_VERSION = 07b2fe65d3bcf72d38bbf24453d493d38c359d9c
 GST_OMX_SITE = http://cgit.freedesktop.org/~adn770/gst-omx/snapshot/
 GST_OMX_SOURCE = gst-omx-$(GST_OMX_VERSION).tar.gz
 GST_OMX_INSTALL_STAGING = YES
