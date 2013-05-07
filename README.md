@@ -56,6 +56,6 @@ You will need to extract *output/images/rootfs.tar* onto the partition, as **roo
 Login
 -----
 
-You can login to the system using *ssh*, by default the password is set to *root*.
+You can login to the system using *ssh*, by default the password is set to **root**.
 
 	ssh root@192.168.1.100 # replace with your ip address
