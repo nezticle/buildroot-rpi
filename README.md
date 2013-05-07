@@ -10,7 +10,7 @@ MiniBrowser is installed by default for testing the Qt5 WebKit implementation.
 Building
 --------
 
-  git clone git://github.com/albertd/buildroot-rpi.git
+	git clone git://github.com/albertd/buildroot-rpi.git
 	cd buildroot_rpi
 	make rpi_defconfig
 	make menuconfig      # if you want to add packages
