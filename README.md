@@ -11,7 +11,7 @@ Building
 --------
 
 	git clone git://github.com/albertd/buildroot-rpi.git
-	cd buildroot_rpi
+	cd buildroot-rpi
 	make rpi_defconfig
 	make menuconfig      # if you want to add packages
 	make                 # build (NOTICE: Don't use the **-j** switch, it's set to auto-detect)
@@ -20,8 +20,7 @@ Deploying
 ---------
 
 You will need to create two partitions in your sdcard, the first (boot) needs
-to be a small *W95 FAT32 (LBA)* patition (that's partition id **c**), about 50
-MB will do.
+to be a small *W95 FAT32 (LBA)* patition, about 100 MB will do.
 
 **Notice** you will need to replace *sdx* in the following commands with the
 actual device node for your sdcard.
