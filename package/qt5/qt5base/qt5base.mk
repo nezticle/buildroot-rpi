@@ -23,12 +23,17 @@ QT5BASE_CONFIGURE_OPTS += \
 	-no-kms \
 	-no-cups \
 	-no-nis \
-	-no-libudev \
 	-no-iconv \
 	-no-gtkstyle \
 	-system-zlib \
 	-system-pcre \
 	-no-pch
+
+ifeq ($(BR2_PACKAGE_UDEV),y)
+QT5BASE_DEPENDENCIES += udev
+else
+QT5BASE_CONFIGURE_OPTS += -no-libudev
+endif
 
 ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
 QT5BASE_DEPENDENCIES += gst-omx
