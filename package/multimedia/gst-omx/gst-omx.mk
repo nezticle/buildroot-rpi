@@ -3,8 +3,9 @@
 # gst-omx
 #
 #############################################################
-GST_OMX_VERSION = 07b2fe65d3bcf72d38bbf24453d493d38c359d9c
-GST_OMX_SITE = http://github.com/albertd/gst-omx/tarball/master
+GST_OMX_VERSION = f144a5c3ce7566f561d38995350dfe3ccc78c680
+GST_PLUGINS_GOOD_SOURCE = gst-omx-$(GST_PLUGINS_GOOD_VERSION).tar.gz
+GST_OMX_SITE = http://cgit.freedesktop.org/gstreamer/gst-omx/snapshot/
 GST_OMX_INSTALL_STAGING = YES
 
 GST_OMX_POST_DOWNLOAD_HOOKS += GSTREAMER_COMMON_DOWNLOAD
