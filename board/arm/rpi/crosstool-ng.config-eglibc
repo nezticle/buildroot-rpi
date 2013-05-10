@@ -237,15 +237,16 @@ CT_BINUTILS_binutils=y
 #
 # GNU binutils
 #
-# CT_BINUTILS_V_2_23_1 is not set
-CT_BINUTILS_V_2_22=y
+CT_BINUTILS_V_2_23_1=y
+# CT_BINUTILS_V_2_22 is not set
 # CT_BINUTILS_V_2_21_53 is not set
 # CT_BINUTILS_V_2_21_1a is not set
 # CT_BINUTILS_V_2_20_1a is not set
 # CT_BINUTILS_V_2_19_1a is not set
 # CT_BINUTILS_V_2_18a is not set
 # CT_BINUTILS_CUSTOM is not set
-CT_BINUTILS_VERSION="2.22"
+CT_BINUTILS_VERSION="2.23.1"
+CT_BINUTILS_2_23_1_or_later=y
 CT_BINUTILS_2_22_or_later=y
 CT_BINUTILS_2_21_or_later=y
 CT_BINUTILS_2_20_or_later=y
