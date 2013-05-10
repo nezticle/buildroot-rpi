@@ -1,0 +1,18 @@
+--- a/Tools/MiniBrowser/qt/qml/BrowserWindow.qml	2013-02-25 11:57:26.504838841 +0100
++++ b/Tools/MiniBrowser/qt/qml/BrowserWindow.qml	2013-02-25 11:56:36.064829120 +0100
+
+@@ -360,6 +360,14 @@
+                 webView.loadHtml("Failed to load " + loadRequest.url, "", loadRequest.url)
+         }
+ 
++        experimental.certificateVerificationDialog: Item
++        {
++           Component.onCompleted:
++           {
++              model.accept();
++           }
++        }
++
+         experimental.preferences.fullScreenEnabled: true
+         experimental.preferences.webGLEnabled: true
+         experimental.preferences.webAudioEnabled: true
