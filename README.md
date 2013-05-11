@@ -14,6 +14,8 @@ You will need to install some packages on your host machine, for e.g. on Ubuntu:
 
 	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev
 
+When creating a VM please allocate a minimal of 20GB disk space.
+
 Building
 --------
 
@@ -65,3 +67,13 @@ Login
 You can login to the system using *ssh*, by default the password is set to **root**.
 
 	ssh root@192.168.1.100 # replace with your ip address
+
+Forum
+-----
+
+Please goto http://www.raspberrypi.org/phpBB3/viewtopic.php?f=38&t=43087
+
+Proprietary Packages
+--------------------
+
+For the proprietary packages, e.g. Gstreamer DASH plugin, please contact: sales@metrological.com
