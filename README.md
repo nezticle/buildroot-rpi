@@ -73,7 +73,13 @@ Forum
 
 Please goto http://www.raspberrypi.org/phpBB3/viewtopic.php?f=38&t=43087
 
+Contribute
+----------
+
+**Would you like to join our team?** Drop your details at recruitment@metrological.com 
+Or fork this repository and sent us your *Pull Requests*.
+
 Proprietary Packages
 --------------------
 
-For the proprietary packages, e.g. Gstreamer DASH plugin, please contact: sales@metrological.com
+For the proprietary packages, e.g. Gstreamer DASH plugin, please contact us at sales@metrological.com
