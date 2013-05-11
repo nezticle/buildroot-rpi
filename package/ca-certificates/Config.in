@@ -1,0 +1,4 @@
+config BR2_PACKAGE_CA_CERTIFICATES
+	bool "ca-certificates"
+	help
+	  Generate CA certificates
