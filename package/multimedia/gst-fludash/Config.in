@@ -3,6 +3,7 @@ config BR2_PACKAGE_GST_FLUDASH
 	depends on BR2_PACKAGE_GSTREAMER
 	depends on BR2_PACKAGE_RPI_USERLAND
 	select BR2_PACKAGE_GST_PLUGINS_BASE
+	select BR2_PACKAGE_LIBCURL
 	help
 	  GStreamer DASH plug-in.
 
