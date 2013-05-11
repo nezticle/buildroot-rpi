@@ -29,6 +29,10 @@ QT5BASE_CONFIGURE_OPTS += \
 	-system-pcre \
 	-no-pch
 
+ifeq ($(BR2_PACKAGE_FONTCONFIG),y)
+QT5BASE_DEPENDENCIES += fontconfig
+endif
+
 ifeq ($(BR2_PACKAGE_UDEV),y)
 QT5BASE_DEPENDENCIES += udev
 else
@@ -192,12 +196,19 @@ define QT5BASE_INSTALL_TARGET_PLUGINS
 	fi
 endef
 
+ifeq ($(BR2_PACKAGE_FONTCONFIG),y)
+define QT5BASE_INSTALL_TARGET_FONTS
+	mkdir -p $(TARGET_DIR)/usr/share/fonts
+	cp -dpfr $(@D)/lib/fonts/* $(TARGET_DIR)/usr/share/fonts
+endef
+else
 define QT5BASE_INSTALL_TARGET_FONTS
 	if [ -d $(STAGING_DIR)/usr/lib/fonts/ ] ; then \
 		mkdir -p $(TARGET_DIR)/usr/lib/fonts ; \
 		cp -dpfr $(STAGING_DIR)/usr/lib/fonts/* $(TARGET_DIR)/usr/lib/fonts ; \
 	fi
 endef
+endif
 
 ifeq ($(BR2_PREFER_STATIC_LIB),y)
 define QT5BASE_INSTALL_TARGET_CMDS
