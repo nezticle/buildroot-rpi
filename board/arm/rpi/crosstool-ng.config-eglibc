@@ -189,14 +189,15 @@ CT_BUILD_SUFFIX=""
 #
 CT_KERNEL_SUPPORTS_SHARED_LIBS=y
 CT_KERNEL="linux"
-CT_KERNEL_VERSION="3.6.11"
+CT_KERNEL_VERSION="3.9.1"
 CT_KERNEL_linux=y
 CT_KERNEL_linux_AVAILABLE=y
+CT_KERNEL_V_3_9=y
 # CT_KERNEL_V_3_7_3 is not set
 # CT_KERNEL_V_3_7_2 is not set
 # CT_KERNEL_V_3_7_1 is not set
 # CT_KERNEL_V_3_7 is not set
-CT_KERNEL_V_3_6=y
+# CT_KERNEL_V_3_6 is not set
 # CT_KERNEL_V_3_5 is not set
 # CT_KERNEL_V_3_4 is not set
 # CT_KERNEL_V_3_3 is not set
