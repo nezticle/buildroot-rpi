@@ -661,6 +661,7 @@ source "package/mcrypt/Config.in"
 source "package/mobile-broadband-provider-info/Config.in"
 source "package/shared-mime-info/Config.in"
 source "package/snowball-init/Config.in"
+source "package/snowshoe/Config.in"
 source "package/sound-theme-borealis/Config.in"
 source "package/sound-theme-freedesktop/Config.in"
 endmenu
