@@ -10,11 +10,15 @@ Snowshoe (http://www.snowshoe.cc/) browser is installed by default.
 Dependencies
 ------------
 
-You will need to install some packages on your host machine, for e.g. on Ubuntu:
+You will need to install some packages on your host machine, for e.g. on Ubuntu 12.04:
 
 	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev
 
-When creating a VM please allocate a minimal of 20GB disk space.
+For host machines with kernel 3.8 or higher (e.g. Ubuntu 13.04) you can use the F2FS filesystem:
+
+	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev f2fs-tools
+
+When creating a VM please allocate a minimal of 15GB disk space.
 
 Building
 --------
@@ -52,6 +56,14 @@ and formated as *ext4*.
 
 	# run the following as root
 	mkfs.ext4 -L rootfs /dev/sdx2
+	mkdir -p /media/rootfs
+	mount /dev/sdx2 /media/rootfs
+
+Or you can use the F2FS filesystem (http://en.wikipedia.org/wiki/F2FS), requires an host machine
+with kernel version 3.8 or higher.
+
+	# run the following as root
+	mkfs.f2fs -l rootfs /dev/sdx2
 	mkdir -p /media/rootfs
 	mount /dev/sdx2 /media/rootfs
 
