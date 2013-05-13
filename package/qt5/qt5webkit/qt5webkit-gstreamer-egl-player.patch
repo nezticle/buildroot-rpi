@@ -1,6 +1,5 @@
-diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
 --- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-04-09 02:11:44.000000000 +0200
-+++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-09 15:31:19.850478354 +0200
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-13 18:07:16.295693927 +0200
 @@ -35,8 +35,6 @@
  #include "GStreamerVersioning.h"
  #include "GraphicsContext.h"
@@ -249,7 +248,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
          LOG_MEDIA_MESSAGE("Duration changed");
          durationChanged();
          break;
-@@ -873,6 +932,273 @@
+@@ -873,6 +932,276 @@
      return TRUE;
  }
  
@@ -470,6 +469,9 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
 +    EGLint error;
 +    GstEGLDisplay *gst_display;
 +
++    /* reset error state */
++    while (glGetError() != GL_NO_ERROR);
++
 +    LOG_MEDIA_MESSAGE("display %d context %d", m_egl_details->display, m_egl_details->context);
 +
 +    gst_display = gst_egl_display_new (m_egl_details->display, NULL, NULL);
@@ -523,7 +525,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
  void MediaPlayerPrivateGStreamer::processBufferingStats(GstMessage* message)
  {
      // This is the immediate buffering that needs to happen so we have
-@@ -999,11 +1325,7 @@
+@@ -999,11 +1328,7 @@
  
      GstFormat fmt = GST_FORMAT_BYTES;
      gint64 length = 0;
@@ -535,7 +537,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
          LOG_MEDIA_MESSAGE("totalBytes %" G_GINT64_FORMAT, length);
          m_totalBytes = static_cast<unsigned>(length);
          m_isStreaming = !length;
-@@ -1015,17 +1337,6 @@
+@@ -1015,17 +1340,6 @@
      GstIterator* iter = gst_element_iterate_src_pads(m_source.get());
      bool done = false;
      while (!done) {
@@ -553,7 +555,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
          gpointer data;
  
          switch (gst_iterator_next(iter, &data)) {
-@@ -1036,7 +1347,6 @@
+@@ -1036,7 +1350,6 @@
                  length = padLength;
              break;
          }
@@ -561,7 +563,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
          case GST_ITERATOR_RESYNC:
              gst_iterator_resync(iter);
              break;
-@@ -1046,10 +1356,6 @@
+@@ -1046,10 +1359,6 @@
              done = true;
              break;
          }
@@ -572,7 +574,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
      }
  
      gst_iterator_free(iter);
-@@ -1063,16 +1369,14 @@
+@@ -1063,16 +1372,14 @@
  unsigned MediaPlayerPrivateGStreamer::decodedFrameCount() const
  {
      guint64 decodedFrames = 0;
@@ -591,7 +593,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
      return static_cast<unsigned>(framesDropped);
  }
  
-@@ -1093,7 +1397,7 @@
+@@ -1093,7 +1400,7 @@
      GstQuery* query = gst_query_new_position(GST_FORMAT_BYTES);
      gint64 position = 0;
  
@@ -600,7 +602,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
          gst_query_parse_position(query, 0, &position);
  
      gst_query_unref(query);
-@@ -1446,7 +1750,10 @@
+@@ -1446,7 +1753,10 @@
  
      if (!m_player->mediaPlayerClient()->mediaPlayerIsLooping()) {
          m_paused = true;
@@ -611,7 +613,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
      }
  }
  
-@@ -1551,36 +1858,64 @@
+@@ -1551,36 +1861,67 @@
  {
  }
  
@@ -684,14 +686,17 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
 +    dequeueObjects();
 +
 +    if (m_texture) {
-+        textureMapper->drawTexture(*m_texture.get(), targetRect, matrix, opacity);
++        TransformationMatrix mmatrix = matrix;
++        mmatrix.setM22(-mmatrix.m22());
++        mmatrix.setM42(targetRect.maxY() + mmatrix.m42());
++        textureMapper->drawTexture(*m_texture.get(), targetRect, mmatrix, opacity);
 +    }
  }
 +#endif
  
  static HashSet<String> mimeTypeCache()
  {
-@@ -1717,10 +2052,6 @@
+@@ -1717,10 +2058,6 @@
  PlatformMedia MediaPlayerPrivateGStreamer::platformMedia() const
  {
      PlatformMedia p;
@@ -702,7 +707,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
      return p;
  }
  
-@@ -1764,11 +2095,8 @@
+@@ -1764,11 +2101,8 @@
      ASSERT(!m_playBin);
      m_playBin = gst_element_factory_make(gPlaybinName, "play");
  
@@ -715,7 +720,7 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
      gst_bus_add_signal_watch(bus);
      g_signal_connect(bus, "message", G_CALLBACK(mediaPlayerPrivateMessageCallback), this);
      gst_object_unref(bus);
-@@ -1781,96 +2109,18 @@
+@@ -1781,96 +2115,18 @@
      g_signal_connect(m_playBin, "video-changed", G_CALLBACK(mediaPlayerPrivateVideoChangedCallback), this);
      g_signal_connect(m_playBin, "audio-changed", G_CALLBACK(mediaPlayerPrivateAudioChangedCallback), this);
  
@@ -823,9 +828,8 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
  }
  
  }
-diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h
 --- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-04-09 02:11:44.000000000 +0200
-+++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-05-09 15:31:19.850478354 +0200
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-05-13 18:06:28.647690323 +0200
 @@ -32,11 +32,20 @@
  #include <gst/gst.h>
  #include <wtf/Forward.h>
@@ -936,9 +940,8 @@ diff -urN a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStream
      };
  }
  
-diff -urN a/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h b/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h
 --- a/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-04-09 02:11:44.000000000 +0200
-+++ b/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-05-09 15:31:19.850478354 +0200
++++ b/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-05-13 18:06:28.647690323 +0200
 @@ -68,6 +68,7 @@
      virtual void setContentsToImage(Image*);
      virtual void setContentsToMedia(PlatformLayer*);
@@ -947,9 +950,8 @@ diff -urN a/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h
      virtual void flushCompositingState(const FloatRect&);
      virtual void flushCompositingStateForThisLayerOnly();
      virtual void setName(const String& name);
-diff -urN a/Source/WebCore/rendering/RenderLayerBacking.cpp b/Source/WebCore/rendering/RenderLayerBacking.cpp
 --- a/Source/WebCore/rendering/RenderLayerBacking.cpp	2013-04-09 02:11:43.000000000 +0200
-+++ b/Source/WebCore/rendering/RenderLayerBacking.cpp	2013-05-09 15:31:19.850478354 +0200
++++ b/Source/WebCore/rendering/RenderLayerBacking.cpp	2013-05-13 18:06:28.647690323 +0200
 @@ -1477,8 +1477,13 @@
  {
      ASSERT(!paintsIntoCompositedAncestor());
@@ -985,9 +987,8 @@ diff -urN a/Source/WebCore/rendering/RenderLayerBacking.cpp b/Source/WebCore/ren
      }
  
      if (m_foregroundLayer && m_foregroundLayer->drawsContent()) {
-diff -urN a/Source/WebCore/WebCore.pri b/Source/WebCore/WebCore.pri
 --- a/Source/WebCore/WebCore.pri	2013-04-09 02:11:45.000000000 +0200
-+++ b/Source/WebCore/WebCore.pri	2013-05-09 15:31:19.846478519 +0200
++++ b/Source/WebCore/WebCore.pri	2013-05-13 18:06:28.647690323 +0200
 @@ -167,7 +167,7 @@
  
  use?(GSTREAMER) {
