@@ -65,12 +65,13 @@ with kernel version 3.8 or higher.
 	# run the following as root
 	mkfs.f2fs -l rootfs /dev/sdx2
 	mkdir -p /media/rootfs
-	mount /dev/sdx2 /media/rootfs
+	mount -t f2fs /dev/sdx2 /media/rootfs
 
 You will need to extract *output/images/rootfs.tar* onto the partition, as **root**.
 
 	# run the following as root
 	tar -xvpsf output/images/rootfs.tar -C /media/rootfs # replace with your mount directory
+	sed -i /media/rootfs/etc/fstab -e "s/ext4/f2fs/" # only if F2FS is used
 	umount /media/rootfs
 
 Login
