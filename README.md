@@ -71,6 +71,7 @@ You will need to extract *output/images/rootfs.tar* onto the partition, as **roo
 
 	# run the following as root
 	tar -xvpsf output/images/rootfs.tar -C /media/rootfs # replace with your mount directory
+	sed -i /media/rootfs/etc/fstab -e "s/ext4/f2fs/" # only if F2FS is used
 	umount /media/rootfs
 
 Login
