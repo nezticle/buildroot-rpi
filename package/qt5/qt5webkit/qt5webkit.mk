@@ -27,12 +27,6 @@ endef
 
 define QT5WEBKIT_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)
-
-	(cd $(@D)/Tools/MiniBrowser/qt; \
-		$(TARGET_MAKE_ENV) \
-		$(HOST_DIR)/usr/bin/qmake)
-
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/Tools/MiniBrowser/qt
 endef
 
 define QT5WEBKIT_INSTALL_STAGING_CMDS
