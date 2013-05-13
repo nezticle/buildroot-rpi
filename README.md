@@ -5,7 +5,7 @@ This buildroot fork will produce a very light-weight and trimmed down
 toolchain, rootfs and kernel for the Raspberry Pi. It also includes
 Qt5 WebKit and Gstreamer libraries / plugins.
 
-MiniBrowser is installed by default for testing the Qt5 WebKit implementation.
+Snowshoe (http://www.snowshoe.cc/) browser is installed by default.
 
 Dependencies
 ------------
