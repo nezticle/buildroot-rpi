@@ -25,5 +25,11 @@ ICU_MAKE = $(MAKE1)
 ICU_SUBDIR = source
 HOST_ICU_SUBDIR = source
 
+define ICU_MINIMIZE
+	cp package/icu/icudt48l.dat $(@D)/source/data/in/
+endef
+
+ICU_POST_EXTRACT_HOOKS += ICU_MINIMIZE
+
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))
