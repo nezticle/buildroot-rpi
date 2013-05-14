@@ -20,7 +20,7 @@ BR2_TARGET_GENERIC_ROOT_PASSWD="root"
 BR2_TARGET_GENERIC_GETTY_PORT="tty1"
 BR2_TARGET_GENERIC_GETTY_TERM=""
 
-BR2_TARGET_OPTIMIZATION="-pipe -mhard-float -mfloat-abi=hard -mfpu=vfp -mtune=arm1176jzf-s -march=armv6zk"
+BR2_TARGET_OPTIMIZATION="-pipe -mhard-float -mfloat-abi=hard -mfpu=vfp -mtune=arm1176jzf-s -march=armv6zk -fsigned-char -fomit-frame-pointer"
 
 BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_UDEV=y
 
@@ -100,6 +100,8 @@ BR2_PACKAGE_QT5BASE_GIF=y
 BR2_PACKAGE_QT5BASE_JPEG=y
 BR2_PACKAGE_QT5BASE_PNG=y
 BR2_PACKAGE_QT5BASE_LICENSE_APPROVED=y
+
+BR2_PACKAGE_ICU_MINIMIZED=y
 
 BR2_PACKAGE_SNOWSHOE=y
 
