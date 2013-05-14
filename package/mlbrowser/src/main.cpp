@@ -4,14 +4,14 @@
 #include <QApplication>
 #include <QtGui>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #undef _KEYFILTER_
-#else
 // Workaround, use setCursor on QWidget instead
 #define _MOUSE_
 #endif
 
-#if defined ( _KEYFILTER_ )
+//#if defined ( _KEYFILTER_ )
+#ifdef _KEYFILTER_
 #include <QWSServer>
 #endif
 

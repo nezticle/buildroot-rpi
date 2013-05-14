@@ -26,12 +26,14 @@ SOURCES = \
 
 DEFINES += \
 	_BROWSER_ \
-	_PLAYER_ \
-	_INSPECTOR_
+	_INSPECTOR_ \
 	_KEYFILTER_
+#	_PLAYER_ \
 
+#ifdef _PLAYER_
 unix
 {
 	CONFIG += link_pkgconfig
 	PKGCONFIG += gstreamer-0.10
 }
+#endif

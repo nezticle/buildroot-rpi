@@ -22,7 +22,9 @@ bool Player::load(QString _url_)
 //TODO:	dynamic allocation
 	char pdef [500];
 //TODO: verify
-	sprintf(pdef,"gst-launch-0.10 videotestsrc ! queue ! eglglessink", url.toLatin1().constData() );
+	sprintf(pdef,"gst-launch-0.10 videotestsrc ! queue ! eglglessink");
+
+	//sprintf(pdef,"gst-launch-0.10 playbin2c uri=%s ! queue ! eglglessink", url.toLatin1().constData() );
 
 	pbin = gst_parse_launch ( pdef, NULL );
 
