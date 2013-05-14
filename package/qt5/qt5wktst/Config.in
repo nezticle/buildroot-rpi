@@ -1,0 +1,9 @@
+config BR2_PACKAGE_QT5WKTST
+	bool "qt5wktst"
+	depends on BR2_PACKAGE_QT5WEBKIT
+	help
+	  Qt is a cross-platform application and UI framework for
+	  developers using C++.
+
+	  This package corresponds to the qt5webkit test module.
+
