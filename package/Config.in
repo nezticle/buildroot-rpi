@@ -111,6 +111,7 @@ comment "Graphic applications"
 source "package/gnuplot/Config.in"
 source "package/jhead/Config.in"
 source "package/rrdtool/Config.in"
+source "package/mlbrowser/Config.in"
 
 comment "graphic libraries"
 source "package/cegui06/Config.in"
