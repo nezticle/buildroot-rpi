@@ -1,11 +1,15 @@
-# Metrological's example of a webkit (accelerated) browser
+#############################################################
+#
+# mlbrowser
+#
+#############################################################
 
-MLBROWSER_VERSION=1.1
-MLBROWSER_SITE_METHOD=local
-MLBROWSER_SITE=$(TOPDIR)/package/mlbrowser/src
+MLBROWSER_VERSION = 1.1.0
+MLBROWSER_SITE_METHOD = local
+MLBROWSER_SITE = $(TOPDIR)/package/mlbrowser/src
 
 ifeq ($(BR2_PACKAGE_QT5WEBKIT),y)
-MLBROWSER_DEPENDENCIES = qt5webkit gstreamer
+MLBROWSER_DEPENDENCIES = qt5webkit
 endif
 
 ifeq ($(BR2_PACKAGE_QT_WEBKIT),y)
@@ -13,30 +17,25 @@ MLBROWSER_DEPENDENCIES = qt gstreamer
 endif
 
 define MLBROWSER_CONFIGURE_CMDS
-	# 'clean' if Makefile exist
-	[ -f "$(@D)/Makefile" ] && $(MAKE) -C $(@D) distclean  || echo "Warning: nothing to clean, no Makefile found"
+	(cd $(@D); \
+		$(TARGET_MAKE_ENV) \
+		$(HOST_DIR)/usr/bin/qmake \
+			DEFINES+=_BROWSER_ \
+			DEFINES+=_INSPECTOR_ \
+			DEFINES+=_KEYFILTER_ \
+	)
+endef
 
-        # run qmake
-	(cd $(@D) && $(HOST_DIR)/usr/bin/qmake )
-endef
-	
 define MLBROWSER_BUILD_CMDS
-        $(TARGET_MAKE_ENV) $(MAKE) -C $(@D)
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)
 endef
-	
-define MLBROWSER_INSTALL_STAGING_CMDS
-	# 'install' is defined in *.pro
-        $(MAKE) -C $(@D) install
-endef
-	
+
 define MLBROWSER_INSTALL_TARGET_CMDS
-	# copy binary
-        cp -dpf $(@D)/mlbrowser $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/mlbrowser $(TARGET_DIR)/usr/bin
 endef
-	
+
 define MLBROWSER_UNINSTALL_TARGET_CMDS
-	# 'clean' binary
-        rm $(TARGET_DIR)/usr/bin/mlbrowser
+	rm -f $(TARGET_DIR)/usr/bin/mlbrowser
 endef
-	
-$(eval $(generic-package)) 
+
+$(eval $(generic-package))

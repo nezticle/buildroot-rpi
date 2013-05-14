@@ -1,39 +1,29 @@
-contains(QT_MAJOR_VERSION, 5)
-{
-	QT      += \
-	webkitwidgets \
-	widgets \
-	network 
-}
-
-contains(QT_MAJOR_VERSION, 4)
-{
+contains(QT_MAJOR_VERSION, 5) {
 	QT += \
-	webkit
-	network
+		webkitwidgets \
+		widgets \
+		network 
 }
 
-TARGET	= mlbrowser
+contains(QT_MAJOR_VERSION, 4) {
+	QT += \
+		webkit \
+		network
+}
 
-HEADERS = \
-	mlwebkit.h \
-	mlplayer.h
+TARGET = mlbrowser
+HEADERS = mlwebkit.h
 
 SOURCES = \
 	mlwebkit.cpp \
-	mlplayer.cpp \
 	main.cpp
 
-DEFINES += \
-	_BROWSER_ \
-	_INSPECTOR_ \
-	_KEYFILTER_
-#	_PLAYER_ \
+contains(DEFINES, _PLAYER_) {
+	HEADERS += mlplayer.h
+	SOURCES += mlplayer.cpp
 
-#ifdef _PLAYER_
-unix
-{
-	CONFIG += link_pkgconfig
-	PKGCONFIG += gstreamer-0.10
+	unix {
+		CONFIG += link_pkgconfig
+		PKGCONFIG += gstreamer-0.10
+	}
 }
-#endif
