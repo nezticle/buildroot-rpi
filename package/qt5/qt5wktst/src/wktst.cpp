@@ -37,5 +37,7 @@ main(int argc, char **argv)
   view.resize(width, height);
   view.show();
 
+  webview.setFocus();
+
   return app.exec();
 }
