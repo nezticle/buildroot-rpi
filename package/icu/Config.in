@@ -7,5 +7,11 @@ config BR2_PACKAGE_ICU
 
 	  http://site.icu-project.org/
 
+config BR2_PACKAGE_ICU_MINIMIZED
+	bool "minimized"
+	depends on BR2_PACKAGE_ICU
+	help
+	  Uses a minimized icu data set.
+
 comment "icu requires a toolchain with C++ support and WCHAR enabled"
 	depends on !BR2_INSTALL_LIBSTDCPP || !BR2_USE_WCHAR
