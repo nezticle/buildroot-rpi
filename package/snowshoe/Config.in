@@ -1,7 +1,6 @@
 config BR2_PACKAGE_SNOWSHOE
 	bool "snowshoe"
 	depends on BR2_PACKAGE_QT5WEBKIT
-
 	help
 		http://snowshoe.openbossa.org
 
