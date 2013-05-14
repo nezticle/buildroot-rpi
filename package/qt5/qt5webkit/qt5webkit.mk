@@ -22,7 +22,13 @@ QT5WEBKIT_REDISTRIBUTE = NO
 endif
 
 define QT5WEBKIT_CONFIGURE_CMDS
-	(cd $(@D); $(TARGET_MAKE_ENV) $(HOST_DIR)/usr/bin/qmake)
+	(cd $(@D); \
+		$(TARGET_MAKE_ENV) 
+		$(HOST_DIR)/usr/bin/qmake \
+			WEBKIT_CONFIG-=svg \
+			CONFIG+=release \
+			CONFIG-=debug \
+	)
 endef
 
 define QT5WEBKIT_BUILD_CMDS
