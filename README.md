@@ -14,7 +14,7 @@ You will need to install some packages on your host machine, for e.g. on Ubuntu 
 
 	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev
 
-For host machines with kernel 3.8 or higher (e.g. Ubuntu 13.04) you can use the F2FS filesystem:
+For host machines with kernel 3.8 or higher (e.g. Ubuntu 13.04) you can use the experimental F2FS filesystem:
 
 	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev f2fs-tools
 
