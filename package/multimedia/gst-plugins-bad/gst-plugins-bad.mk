@@ -3,7 +3,7 @@
 # gst-plugins-bad
 #
 #############################################################
-GST_PLUGINS_BAD_VERSION = a6ed078adbea1ed19ae8ba86754a85c97582b5f4
+GST_PLUGINS_BAD_VERSION = cbc69af15293781869edcd1a3613669b84538eca
 GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VERSION).tar.gz
 GST_PLUGINS_BAD_SITE = http://cgit.freedesktop.org/gstreamer-sdk/gst-plugins-bad/snapshot/
 GST_PLUGINS_BAD_AUTORECONF = YES
