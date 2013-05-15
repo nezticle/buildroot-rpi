@@ -21,8 +21,6 @@ define MLBROWSER_CONFIGURE_CMDS
 		$(TARGET_MAKE_ENV) \
 		$(HOST_DIR)/usr/bin/qmake \
 			DEFINES+=_BROWSER_ \
-			DEFINES+=_INSPECTOR_ \
-			DEFINES+=_KEYFILTER_ \
 	)
 endef
 
