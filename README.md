@@ -32,8 +32,9 @@ Building
 Deploying
 ---------
 
-You will need to create two partitions in your sdcard, the first (boot) needs
-to be a small *W95 FAT32 (LBA)* patition, about 100 MB will do.
+You will need to create two partitions on your sdcard and copy files to the appropriate partitons.
+
+The first (boot) is a small *W95 FAT32 (LBA)* partition of about 100 MB in size.
 
 **Notice** you will need to replace *sdx* in the following commands with the
 actual device node for your sdcard.
@@ -49,35 +50,35 @@ kernel from *output/images/zImage* to your *boot* partition.
 	# run the following as root
 	cp output/images/rpi-firmware/* /media/boot
 	cp output/images/zImage /media/boot
+	sync
 	umount /media/boot
 
-The second (rootfs) can be as big as you want, but with a 200 MB minimum,
-and formated as *ext4*.
+The second (rootfs) can be as big in size as you prefer, but with a 200 MB minimum. It should be formatted as *ext4*.
 
 	# run the following as root
 	mkfs.ext4 -L rootfs /dev/sdx2
 	mkdir -p /media/rootfs
 	mount /dev/sdx2 /media/rootfs
 
-Or you can use the F2FS filesystem (http://en.wikipedia.org/wiki/F2FS), requires an host machine
-with kernel version 3.8 or higher.
+Alternatively, you can use the F2FS filesystem (http://en.wikipedia.org/wiki/F2FS). In this case your host machine requires kernel version 3.8 or higher.
 
 	# run the following as root
 	mkfs.f2fs -l rootfs /dev/sdx2
 	mkdir -p /media/rootfs
 	mount -t f2fs /dev/sdx2 /media/rootfs
 
-You will need to extract *output/images/rootfs.tar* onto the partition, as **root**.
+You will need to extract *output/images/rootfs.tar* to the partition, as **root**.
 
 	# run the following as root
 	tar -xvpsf output/images/rootfs.tar -C /media/rootfs # replace with your mount directory
 	sed -i /media/rootfs/etc/fstab -e "s/ext4/f2fs/" # only if F2FS is used
+	sync
 	umount /media/rootfs
 
 Login
 -----
 
-You can login to the system using *ssh*, by default the password is set to **root**.
+You can login to the system using *ssh*. The default password is set to **root**. It is configurable with make menuconfig.
 
 	ssh root@192.168.1.100 # replace with your ip address
 
@@ -90,7 +91,7 @@ Contribute
 ----------
 
 **Would you like to join our team?** Drop your details at recruitment@metrological.com 
-Or fork this repository and sent us your *Pull Requests*.
+or fork this repository and send us your *Pull Requests*.
 
 Proprietary Packages
 --------------------
