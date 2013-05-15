@@ -5,14 +5,8 @@
 #include <QtGui>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#undef _KEYFILTER_
 // Workaround, use setCursor on QWidget instead
 #define _MOUSE_
-#endif
-
-//#if defined ( _KEYFILTER_ )
-#ifdef _KEYFILTER_
-#include <QWSServer>
 #endif
 
 #ifdef _KEYFILTER_
@@ -33,79 +27,93 @@
 #endif
 
 #ifdef _KEYFILTER_
-class KeyFilter : public QWSServer::KeyboardFilter
+class KeyFilter : public QObject
 {
-public:
-	bool filter(int unicode, int keycode, int modifiers, bool isPress, bool autoRepeat)
+protected:
+	bool eventFilter(QObject* pobject, QEvent* pevent)
 	{
-		Q_UNUSED(unicode);
-
+		if ( pevent->type() == QEvent::KeyPress )
+		{
 //TODO: understand why a stream of keycode = 0 with alternating repeat occurs 
 
-		if ( keycode != 0 ) // avoid a (default) stream of output
-			qDebug() << "METROLOGICAL : key code (Qt::Key) : " << QString("%1").arg(keycode, 0, 16) << " : unicode : " << unicode << " : modifiers (or of Qt::KeyboardModifier's) : "<< modifiers << " : keypress event (true/false) : " << isPress << " : key by autorepeat mechanism (true/false) : " << autoRepeat;
+			QKeyEvent* pkeyevent = static_cast< QKeyEvent* >( pevent );
 
+			/*
+			pkeyevent->count
+			pkeyevent->isAutoRepeat
+			pkeyevent->key
+			pkeyevent->matches
+			pkeyevent->modifiers
+			pkeyevent->nativeModifiers
+			pkeyevent->nativeScanCode
+			pkeyevent->nativeVirtualKey
+			pkeyevent->text
+			*/
+
+			if ( pkeyevent->key() != 0 ) // avoid a (default) stream of output
+				qDebug() << "METROLOGICAL : key code (Qt::Key) : " << QString("%1").arg(pkeyevent->key(), 0, 16) << " : unicode : " << pkeyevent->text() << " : modifiers (or of Qt::KeyboardModifier's) : "<< pkeyevent->modifiers() << " : keypress event (true/false) : " << true << " : key by autorepeat mechanism (true/false) : " << pkeyevent->isAutoRepeat();
 //TODO: check values
 
-		//qDebug () << "METROLOGICAL : application instance :" << QApplication::instance();
-		qDebug () << "METROLOGICAL : focus widget : " << QApplication::focusWidget (); 
+			qDebug () << "METROLOGICAL : application instance :" << QApplication::instance();
+			qDebug () << "METROLOGICAL : active window : " << QApplication::activeWindow (); 
+			qDebug () << "METROLOGICAL : focus widget : " << QApplication::focusWidget (); 
 
-		switch ( keycode )
-		{
-			case Qt::Key_Select : // 0x1010000
+			switch ( pkeyevent->key() )
 			{
-				QKeyEvent keyevent ( isPress ?  QEvent::KeyPress : QEvent::KeyRelease, Qt::Key_Enter, (Qt::KeyboardModifiers) modifiers, "", autoRepeat, 1 );
-				/*qDebug () << "METROLOGICAL : send event : " << */QApplication::sendEvent ( QApplication::focusWidget(), &keyevent ); 
-				return true;
-			}
+				case Qt::Key_Select : // 0x1010000
+				{
+					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_Enter, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
+					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent ); 
+					return true;
+				}
 
-			case Qt::Key_Menu : // 0x1000055
-        	        {
-				QKeyEvent keyevent ( isPress ?  QEvent::KeyPress : QEvent::KeyRelease, Qt::Key_Backspace, (Qt::KeyboardModifiers) modifiers, "", autoRepeat, 1 );
-				/*qDebug () << "METROLOGICAL : send event : " << */QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-				return true;
-        	        } 
+				case Qt::Key_Menu : // 0x1000055
+        	        	{
+					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_Backspace, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
+					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
+					return true;
+        		        } 
 
-			case Qt::Key_HomePage : // 'Apps', 0x1000090
-			{
-				QKeyEvent keyevent ( isPress ?  QEvent::KeyPress : QEvent::KeyRelease, Qt::Key_F8, (Qt::KeyboardModifiers) modifiers, "", autoRepeat, 1 );
-				/*qDebug () << "METROLOGICAL : send event : " << */QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-				return true;
-			}
-			case Qt::Key_Favorites : // 'FAV1', 0x1000091
-			{
-				QKeyEvent keyevent ( isPress ?  QEvent::KeyPress : QEvent::KeyRelease, Qt::Key_F10, (Qt::KeyboardModifiers) modifiers, "", autoRepeat, 1 );
-				/*qDebug () << "METROLOGICAL : send event : " << */QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-				return true;
-			}
+				case Qt::Key_HomePage : // 'Apps', 0x1000090
+				{
+					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_F8, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
+					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
+					return true;
+				}
+				case Qt::Key_Favorites : // 'FAV1', 0x1000091
+				{
+					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_F10, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
+					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
+					return true;
+				}
 #ifdef _INSPECTOR_
-			case Qt::Key_Period : // '.' (period), 0x2e
-			{
+				case Qt::Key_Period : // '.' (period), 0x2e
+				{
 //TODO: move to the browser context menu event 
 
-				// show / hide webinspector
-				MLWebKit* pWebKit = MLWebKit::instance();
+					// show / hide webinspector
+					MLWebKit* pWebKit = MLWebKit::instance();
 
-				if (pWebKit != NULL && isPress != true )
-					pWebKit->inspector();
+					if (pWebKit != NULL )
+						pWebKit->inspector();
 
-				return true;
-			}
+					return true;
+				}
 
-			case Qt::Key_VolumeMute : // 0x1000071
-			{	
-				QKeyEvent keyevent ( isPress ?  QEvent::KeyPress : QEvent::KeyRelease, Qt::Key_BracketRight, Qt::ControlModifier, "", autoRepeat, 1 );
-				qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-				return true;
-			}
+				case Qt::Key_VolumeMute : // 0x1000071
+				{	
+					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_BracketRight, Qt::ControlModifier, "", pkeyevent->isAutoRepeat(), 1 );
+					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
+					return true;
+				}
 
 #endif
-			default:;
-		}
+				default:;
+			}
+		}	
 
-		//return true; // stop the key from being processed any further
-		return false;
-	}
+	return QObject::eventFilter(pobject, pevent);
+     }
 };
 #endif
 
@@ -117,20 +125,21 @@ int main(int argc, char * argv[])
         Player player(NULL);
 #endif
 
-#ifdef _KEYFILTER_
-	qDebug () << "METROLOGICAL : add keyboard filter";
-
-	KeyFilter filter;
-	QWSServer::addKeyboardFilter(&filter);
-#endif
-
 	qDebug () << "METROLOGICAL : start main application";
 
 	QApplication app(argc, argv);
 
+#ifdef _KEYFILTER_
+	qDebug () << "METROLOGICAL : add keyboard filter";
+
+	KeyFilter keyfilter;
+
+	app.installEventFilter ( &keyfilter );
+#endif
+
 #ifdef _EVENTMONITORING_
         qDebug () << "METROLOGICAL : enable event monitoring";
-	EventListener listener(&app);
+	EventListener listener( &app );
 #endif
 
 #ifdef _BROWSER_

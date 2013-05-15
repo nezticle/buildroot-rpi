@@ -86,8 +86,9 @@ MLWebKit::MLWebKit()
 
 	pWebview = new GraphicsWebView();
 
-pWidget = new QGLWidget();
-
+#ifdef QT_OPENGL_LIB
+	pWidget = new QGLWidget();
+#endif
 	pPage =  new WebPage();
 
 	pFrame = pPage->mainFrame();
@@ -102,8 +103,9 @@ pWidget = new QGLWidget();
 		return;
 	}
 
-// if OpenGL is supported
-pWidget = new QGLWidget(pView);
+#ifdef QT_OPENGL_LIB
+	pWidget = new QGLWidget(pView);
+#endif
 
 #ifdef _INSPECTOR_
 	pInspector = new QWebInspector;
@@ -111,10 +113,11 @@ pWidget = new QGLWidget(pView);
         pInspector->resize(QApplication::desktop()->screenGeometry().size());
 #endif
 
-// if OpenGL is supported
-pView->setViewport(pWidget);
+#ifdef QT_OPENGL_LIB
+	pView->setViewport(pWidget);
+#endif
 
-	// Cenfiguration, settings and alike
+	// Configuration, settings and alike
 	pScene->setItemIndexMethod( QGraphicsScene::NoIndex);
 //	pView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 //	pView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
@@ -259,20 +262,24 @@ void MLWebKit::inspector()
  
  		if ( pInspector->isVisible() == false )
  		{
-//		        pInspector->resize(QApplication::desktop()->screenGeometry().size());
-//			pInspector->setFocus();
- 			pInspector->show();
+			qDebug () << "METROLOGICAL : show webinspector";
+
  			pWebview->hide();
-//		        pInspector->resize(QApplication::desktop()->screenGeometry().size());
+ 			pInspector->show();
 			pInspector->setFocus();
  		}
  		else
  		{
-//			pView->setFocus();
-			pWebview->setFocus();
+			qDebug () << "METROLOGICAL : hide webinspector";
+
  			pInspector->hide();
- 			pWebview->show();
+			pWebview->show();
+
+			QApplication::setActiveWindow(pView);
 			pView->setFocus();
+
+//pWebview->reload();
+
  		}
  	}
 	else
