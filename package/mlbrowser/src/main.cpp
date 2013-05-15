@@ -4,11 +4,6 @@
 #include <QApplication>
 #include <QtGui>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-// Workaround, use setCursor on QWidget instead
-#define _MOUSE_
-#endif
-
 #ifdef _KEYFILTER_
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -152,7 +147,7 @@ int main(int argc, char * argv[])
 
 #ifndef _MOUSE_
         qDebug () << "METROLOGICAL : hide mouse pointer";
-        QWSServer::setCursorVisible(false);
+	QApplication::setOverrideCursor ( QCursor ( Qt::BlankCursor ) );
 #endif
 
         MLWebKit* browser = new MLWebKit();
