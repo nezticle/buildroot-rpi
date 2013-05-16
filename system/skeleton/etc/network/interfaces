@@ -5,4 +5,3 @@ iface lo inet loopback
 # Configure eth0
 auto eth0
 iface eth0 inet dhcp
-post-up /etc/network/if-up.d/rdate
