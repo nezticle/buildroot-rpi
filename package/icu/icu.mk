@@ -13,8 +13,10 @@ ICU_LICENSE_FILES = license.html
 ICU_DEPENDENCIES = host-icu
 ICU_INSTALL_STAGING = YES
 ICU_CONFIG_SCRIPTS = icu-config
-ICU_CONF_OPT = --with-cross-build=$(HOST_ICU_DIR)/source --disable-samples \
-		--disable-tests
+ICU_CONF_OPT = \
+	--with-cross-build=$(HOST_ICU_DIR)/source \
+	--disable-samples \
+	--disable-tests
 HOST_ICU_CONF_OPT = \
 	--disable-samples \
 	--disable-tests \
@@ -24,6 +26,13 @@ HOST_ICU_CONF_OPT = \
 ICU_MAKE = $(MAKE1)
 ICU_SUBDIR = source
 HOST_ICU_SUBDIR = source
+
+ifeq ($(BR2_PACKAGE_ICU_MINIMIZED),y)
+ICU_CONF_OPT += \
+	--disable-extras \
+	--disable-icuio \
+	--disable-layout
+endif
 
 define ICU_MINIMIZE
 	cp package/icu/icudt48l.dat $(@D)/source/data/in/
