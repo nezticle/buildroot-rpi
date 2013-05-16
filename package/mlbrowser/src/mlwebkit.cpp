@@ -165,14 +165,14 @@ MLWebKit::MLWebKit()
 #endif
 
 	pSettings->setAttribute(QWebSettings::AcceleratedCompositingEnabled, true);
-	pSettings->setAttribute(QWebSettings::WebGLEnabled, false);
+	pSettings->setAttribute(QWebSettings::WebGLEnabled, true);
 	pSettings->setAttribute(QWebSettings::PluginsEnabled, false);
 	pSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, true);
 	pSettings->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, true);
 	pSettings->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, true);
-	pSettings->setAttribute(QWebSettings::FrameFlatteningEnabled, true);
+	pSettings->setAttribute(QWebSettings::FrameFlatteningEnabled, false);
 	pSettings->setAttribute(QWebSettings::LocalStorageEnabled, true);
-//	pSettings->setAttribute(QWebSettings::WebSecurityEnabled, false);
+	pSettings->setAttribute(QWebSettings::WebSecurityEnabled, false);
 	pSettings->setAttribute(QWebSettings::SpatialNavigationEnabled, false);
 
 	// Overrule the cache settings
