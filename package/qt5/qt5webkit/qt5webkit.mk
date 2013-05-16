@@ -25,10 +25,6 @@ define QT5WEBKIT_CONFIGURE_CMDS
 	(cd $(@D); \
 		$(TARGET_MAKE_ENV) \
 		$(HOST_DIR)/usr/bin/qmake \
-			WEBKIT_CONFIG+=accelerated_2d_canvas \
-			WEBKIT_CONFIG+=animation_api \
-			WEBKIT_CONFIG+=graphics_surface \
-			WEBKIT_CONFIG+=webgl \
 			WEBKIT_CONFIG-=svg \
 			CONFIG+=release \
 			CONFIG-=debug \
