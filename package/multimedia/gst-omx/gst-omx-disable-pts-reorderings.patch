@@ -1,0 +1,34 @@
+--- a/omx/video/gstvideodecoder.c
++++ b/omx/video/gstvideodecoder.c
+@@ -2016,12 +2016,14 @@ gst_video_decoder_prepare_finish_frame (GstVideoDecoder *
+   priv->reorder_idx_out =
+       (priv->reorder_idx_out + 1) % MAX_DTS_PTS_REORDER_DEPTH;
+ 
++#if 0
+   if (!priv->reordered_output && frame->system_frame_number &&
+       priv->last_out_frame_number != (guint) (-1) &&
+       frame->system_frame_number != (priv->last_out_frame_number + 1)) {
+     GST_DEBUG_OBJECT (decoder, "Detected reordered output");
+     priv->reordered_output = TRUE;
+   }
++#endif
+ 
+   GST_LOG_OBJECT (decoder,
+       "finish frame %p (#%d) sync:%d pts:%" GST_TIME_FORMAT " dts:%"
+@@ -2538,6 +2540,7 @@ gst_video_decoder_decode_frame (GstVideoDecoder * decoder,
+       gst_segment_to_running_time (&decoder->input_segment, GST_FORMAT_TIME,
+       frame->pts);
+ 
++#if 0
+   /* Store pts */
+   if (GST_CLOCK_TIME_IS_VALID (frame->pts)
+       && GST_CLOCK_TIME_IS_VALID (priv->last_timestamp_in)
+@@ -2545,6 +2548,8 @@ gst_video_decoder_decode_frame (GstVideoDecoder * decoder,
+     GST_DEBUG_OBJECT (decoder, "Incoming timestamps are out of order");
+     priv->reordered_input = TRUE;
+   }
++#endif
++
+   priv->last_timestamp_in = frame->pts;
+   priv->incoming_timestamps[priv->reorder_idx_in] = frame->pts;
+   priv->reorder_idx_in = (priv->reorder_idx_in + 1) % MAX_DTS_PTS_REORDER_DEPTH;
