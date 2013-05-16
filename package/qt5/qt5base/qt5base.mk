@@ -20,6 +20,7 @@ QT5BASE_INSTALL_STAGING = YES
 #    want to use the one packaged in Buildroot
 QT5BASE_CONFIGURE_OPTS += \
 	-optimized-qmake \
+	-no-qml-debug \
 	-no-kms \
 	-no-cups \
 	-no-nis \
@@ -99,6 +100,17 @@ QT5BASE_CONFIGURE_OPTS += -opengl es2 -eglfs
 QT5BASE_DEPENDENCIES   += libgles libegl
 QT5BASE_INSTALL_LIBS_y += Qt5OpenGL
 ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
+QT5BASE_CONFIGURE_OPTS += \
+	-no-xinerama \
+	-no-xshape \
+	-no-xvideo \
+	-no-xsync \
+	-no-xinput2 \
+	-no-xinput \
+	-no-xcursor \
+	-no-xfixes \
+	-no-xrandr \
+	-no-xrender
 QT5BASE_EGLFS_PLATFORM_HOOKS_SOURCES = \
 	$(@D)/mkspecs/devices/linux-rasp-pi-g++/qeglfshooks_pi.cpp
 endif
@@ -116,6 +128,9 @@ QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_JPEG),-system-libjpeg,-no-l
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_JPEG),jpeg)
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_PNG),-system-libpng,-no-libpng)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_PNG),libpng)
+
+QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_SQLITE),-system-sqlite)
+QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_SQLITE),sqlite)
 
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_DBUS),-dbus,-no-dbus)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_DBUS),dbus)
