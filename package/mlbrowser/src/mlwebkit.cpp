@@ -51,14 +51,14 @@ protected:
 		QString logEntry = message.toUtf8().constData();
 		qDebug()<<logEntry;
 	}
-
+/*
 	virtual QString userAgentForUrl(const QUrl &url ) const
 	{
 		Q_UNUSED(url);
 
 		qDebug () << "METROLOGICAL : user agent : " << "mlwebkit/1.0";
 		return QString("mlwebkit/1.0");
-	}
+	}*/
 };
 
 #ifdef _INSPECTOR_
