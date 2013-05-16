@@ -6,6 +6,7 @@
 CA_CERTIFICATES_VERSION = 1.0.0
 CA_CERTIFICATES_SITE = $(TOPDIR)/package/ca-certificates/bin
 CA_CERTIFICATES_SITE_METHOD = local
+CA_CERTIFICATES_DEPENDENCIES = openssl
 
 define CA_CERTIFICATES_INSTALL_TARGET_CMDS
 	$(@D)/mkcabundle.pl > $(@D)/ca-bundle.crt
