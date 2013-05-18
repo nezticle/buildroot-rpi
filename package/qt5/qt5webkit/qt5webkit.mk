@@ -41,6 +41,7 @@ define QT5WEBKIT_INSTALL_STAGING_CMDS
 endef
 
 define QT5WEBKIT_INSTALL_TARGET_CMDS
+	mkdir -p $(TARGET_DIR)/root/.cache
 	cp -dpf $(STAGING_DIR)/usr/lib/libQt5WebKit*.so.* $(TARGET_DIR)/usr/lib
 	cp -dpf $(@D)/bin/* $(TARGET_DIR)/usr/bin/
 	cp -dpfr $(STAGING_DIR)/usr/qml/QtWebKit $(TARGET_DIR)/usr/qml/
