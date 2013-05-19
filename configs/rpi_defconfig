@@ -1,6 +1,7 @@
 BR2_arm=y
 BR2_arm1176jzf_s=y
 
+BR2_CCACHE=y
 BR2_OPTIMIZE_2=y
 
 BR2_TOOLCHAIN_CTNG=y
