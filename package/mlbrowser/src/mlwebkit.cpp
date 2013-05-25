@@ -51,6 +51,11 @@ protected:
 		QString logEntry = message.toUtf8().constData();
 		qDebug()<<logEntry;
 	}
+
+	bool shouldInterruptJavaScript()
+	{
+		return false;
+	}
 /*
 	virtual QString userAgentForUrl(const QUrl &url ) const
 	{
