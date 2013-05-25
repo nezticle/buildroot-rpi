@@ -18,6 +18,21 @@ SOURCES = \
 	mlwebkit.cpp \
 	main.cpp
 
+contains(DEFINES, _EVENTMONITORING_) {
+	HEADERS += mleventlistener.h
+	SOURCES += mleventlistener.cpp
+}
+contains(DEFINES, _KEYFILTER_) {
+	HEADERS += mlkeyfilter.h
+	SOURCES += mlkeyfilter.cpp
+}
+
+contains(DEFINES, _PROPERTYCHANGER_) {
+	HEADERS += mlpropertychanger.h
+	SOURCES += mlpropertychanger.cpp
+}
+
+
 contains(DEFINES, _PLAYER_) {
 	HEADERS += mlplayer.h
 	SOURCES += mlplayer.cpp

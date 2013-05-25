@@ -22,6 +22,7 @@ define MLBROWSER_CONFIGURE_CMDS
 		$(HOST_DIR)/usr/bin/qmake \
 			DEFINES+=_BROWSER_ \
 			DEFINES+=_MOUSE_ \
+			DEFINES+=_PROPERTYCHANGER_ \
 	)
 endef
 

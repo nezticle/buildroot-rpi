@@ -1,5 +1,5 @@
-#ifndef MLPLAYERT_H
-#define MLPLAYERT_H
+#ifndef MLPLAYER_H
+#define MLPLAYER_H
 
 #include <QString>
 #include <QObject>

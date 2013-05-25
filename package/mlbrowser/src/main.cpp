@@ -10,7 +10,11 @@
 #endif
 
 #ifdef _EVENTMONITORING_ 
-#include "eventlistener.h"
+#include "mleventlistener.h"
+#endif
+
+#ifdef _VERBOSE_
+#include <iostream>
 #endif
 
 #ifdef _BROWSER_
@@ -18,123 +22,94 @@
 #endif
 
 #ifdef _PLAYER_
-#include <mlplayer.h>
+#include "mlplayer.h"
+#endif
+
+#ifdef _PROPERTYCHANGER_
+#include "mlpropertychanger.h"
 #endif
 
 #ifdef _KEYFILTER_
-class KeyFilter : public QObject
-{
-protected:
-	bool eventFilter(QObject* pobject, QEvent* pevent)
-	{
-		if ( pevent->type() == QEvent::KeyPress )
-		{
-//TODO: understand why a stream of keycode = 0 with alternating repeat occurs 
-
-			QKeyEvent* pkeyevent = static_cast< QKeyEvent* >( pevent );
-
-			/*
-			pkeyevent->count
-			pkeyevent->isAutoRepeat
-			pkeyevent->key
-			pkeyevent->matches
-			pkeyevent->modifiers
-			pkeyevent->nativeModifiers
-			pkeyevent->nativeScanCode
-			pkeyevent->nativeVirtualKey
-			pkeyevent->text
-			*/
-
-			if ( pkeyevent->key() != 0 ) // avoid a (default) stream of output
-				qDebug() << "METROLOGICAL : key code (Qt::Key) : " << QString("%1").arg(pkeyevent->key(), 0, 16) << " : unicode : " << pkeyevent->text() << " : modifiers (or of Qt::KeyboardModifier's) : "<< pkeyevent->modifiers() << " : keypress event (true/false) : " << true << " : key by autorepeat mechanism (true/false) : " << pkeyevent->isAutoRepeat();
-//TODO: check values
-
-			qDebug () << "METROLOGICAL : application instance :" << QApplication::instance();
-			qDebug () << "METROLOGICAL : active window : " << QApplication::activeWindow (); 
-			qDebug () << "METROLOGICAL : focus widget : " << QApplication::focusWidget (); 
-
-			switch ( pkeyevent->key() )
-			{
-				case Qt::Key_Select : // 0x1010000
-				{
-					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_Enter, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
-					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent ); 
-					return true;
-				}
-
-				case Qt::Key_Menu : // 0x1000055
-        	        	{
-					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_Backspace, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
-					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-					return true;
-        		        } 
-
-				case Qt::Key_HomePage : // 'Apps', 0x1000090
-				{
-					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_F8, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
-					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-					return true;
-				}
-				case Qt::Key_Favorites : // 'FAV1', 0x1000091
-				{
-					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_F10, pkeyevent->modifiers(), "", pkeyevent->isAutoRepeat(), 1 );
-					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-					return true;
-				}
-#ifdef _INSPECTOR_
-				case Qt::Key_Period : // '.' (period), 0x2e
-				{
-//TODO: move to the browser context menu event 
-
-					// show / hide webinspector
-					MLWebKit* pWebKit = MLWebKit::instance();
-
-					if (pWebKit != NULL )
-						pWebKit->inspector();
-
-					return true;
-				}
-
-				case Qt::Key_VolumeMute : // 0x1000071
-				{	
-					QKeyEvent keyevent ( QEvent::KeyPress, Qt::Key_BracketRight, Qt::ControlModifier, "", pkeyevent->isAutoRepeat(), 1 );
-					qDebug () << "METROLOGICAL : send event : " << QApplication::sendEvent ( QApplication::focusWidget(), &keyevent );
-					return true;
-				}
-
+#include "mlkeyfilter.h"
 #endif
-				default:;
-			}
-		}	
 
-	return QObject::eventFilter(pobject, pevent);
-     }
-};
+#ifdef _VERBOSE_
+void MessageHandler ( QtMsgType type, const QMessageLogContext& context, const QString& message )
+{
+/*
+black - 30
+red - 31
+green - 32
+brown - 33
+blue - 34
+magenta - 35
+cyan - 36
+lightgray - 37
+*/
+
+	std::cerr
+		<< QCoreApplication::instance ()->applicationName().toStdString()
+//		<< " : [ version ] "
+//		<< context.version
+		<< " : [ file ] "
+		<< "\033[0;31m" << context.file << "\033[0m"
+		<< " : [ line ] "
+		<< "\033[0;35m" << context.line << "\033[0m"
+//		<< " : [ category ] "
+//		<< context.category
+		<< " : [ type ] "
+		<< "\033[0;36m";
+
+	switch ( type )
+	{
+		case QtDebugMsg		: std::cerr << "debug"; break;
+		case QtWarningMsg	: std::cerr << "warning"; break;
+		case QtCriticalMsg	: std::cerr << "critical"; break;
+		case QtFatalMsg		: std::cerr << "fatal"; break;
+		default			:;
+	}
+
+	std::cerr
+		<< "\033[0m"
+		<< " : [ function ] "
+		<<  "\033[0;34m" << context.function << "\033[0m"
+		<< " : [ message ] "
+		<< "\033[0;32m" << message.toStdString() << "\033[0m"
+		<< std::endl;
+}
 #endif
 
 int main(int argc, char * argv[])
 {
+	QApplication app(argc, argv);
+
+#ifdef _VERBOSE_
+	qInstallMessageHandler ( MessageHandler );
+#endif
+
 	qDebug () << "METROLOGICAL : browser release (" << _BUILD_DATE_ << _BUILD_TIME_ <<")";
 
 #ifdef _PLAYER_
         Player player(NULL);
 #endif
 
-	qDebug () << "METROLOGICAL : start main application";
+#ifdef _PROPERTYCHANGER_
+	PropertyChanger propertychanger(NULL);
+#endif
 
-	QApplication app(argc, argv);
+//REMARK: order of filters is important; last installed -> receives first
+#ifdef _EVENTMONITORING_
+        qDebug () << "METROLOGICAL : enable event monitoring";
+	EventListener eventlistener;
+
+	app.installEventFilter ( &eventlistener );
+#endif
 
 #ifdef _KEYFILTER_
 	qDebug () << "METROLOGICAL : add keyboard filter";
-
 	KeyFilter keyfilter;
 
 	app.installEventFilter ( &keyfilter );
-#endif
-
-#ifdef _EVENTMONITORING_
-        qDebug () << "METROLOGICAL : enable event monitoring";
-	EventListener listener( &app );
 #endif
 
 #ifdef _BROWSER_
@@ -154,7 +129,12 @@ int main(int argc, char * argv[])
 
 #ifdef _PLAYER_
         qDebug () << "METROLOGICAL : add player";
-	browser->attach_object(&player);
+	browser->attach_object(&player, "player");
+#endif
+
+#ifdef _PROPERTYCHANGER_
+	qDebug () << "METROLOGICAL : add propertychanger"; 
+	browser->attach_object(&propertychanger, "propertychanger");
 #endif
 
 	qDebug () << "METROLOGICAL : load and show page";

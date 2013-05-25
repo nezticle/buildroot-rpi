@@ -6,6 +6,10 @@
 
 #include "mlwebkit.h"
 
+
+#include <QMetaObject>
+
+
 #ifdef _PLAYER_
 #include "mlplayer.h"
 #endif
@@ -56,6 +60,7 @@ protected:
 	{
 		return false;
 	}
+
 /*
 	virtual QString userAgentForUrl(const QUrl &url ) const
 	{
@@ -63,7 +68,8 @@ protected:
 
 		qDebug () << "METROLOGICAL : user agent : " << "mlwebkit/1.0";
 		return QString("mlwebkit/1.0");
-	}*/
+	}
+*/
 };
 
 #ifdef _INSPECTOR_
@@ -123,10 +129,10 @@ MLWebKit::MLWebKit()
 #endif
 
 	// Configuration, settings and alike
-	pScene->setItemIndexMethod( QGraphicsScene::NoIndex);
+//	pScene->setItemIndexMethod( QGraphicsScene::NoIndex);
 //	pView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-//	pView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-	pView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	pView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+//	pView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 //	pView->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
 
 	// Disable some 'browser features / elements'
@@ -170,12 +176,12 @@ MLWebKit::MLWebKit()
 #endif
 
 	pSettings->setAttribute(QWebSettings::AcceleratedCompositingEnabled, true);
-	pSettings->setAttribute(QWebSettings::WebGLEnabled, true);
+	pSettings->setAttribute(QWebSettings::WebGLEnabled, false);
 	pSettings->setAttribute(QWebSettings::PluginsEnabled, false);
 	pSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, true);
 	pSettings->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, true);
 	pSettings->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, true);
-	pSettings->setAttribute(QWebSettings::FrameFlatteningEnabled, false);
+//	pSettings->setAttribute(QWebSettings::FrameFlatteningEnabled, true);
 	pSettings->setAttribute(QWebSettings::LocalStorageEnabled, true);
 	pSettings->setAttribute(QWebSettings::WebSecurityEnabled, false);
 	pSettings->setAttribute(QWebSettings::SpatialNavigationEnabled, false);
@@ -190,7 +196,17 @@ MLWebKit::MLWebKit()
 	// Finalize
 	pScene->addItem(pWebview);
 
+#ifdef _INSPECTOR_
+	pProxyWidget = pScene->addWidget(pInspector);
+#endif
+
 	// Set visibility
+
+#ifdef _INSPECTOR_
+//	pInspector->hide();
+	pProxyWidget->hide();
+#endif
+
 	pWebview->show();
 }
 
@@ -241,18 +257,23 @@ void MLWebKit::hide()
 }
 
 
-#ifdef _PLAYER_
-void MLWebKit::attach_object(QObject* _pObject_)
+#if defined (_PLAYER_) || defined (_PROPERTYCHANGER_)
+void MLWebKit::attach_object(QObject* _pObject_, QString _name_)
 {
 	qDebug () << "METROLOGICAL : attach_player()";
 
 	if ( pFrame != NULL)
 	{	
 		pObject = _pObject_;
-		qDebug () << "METROLOGICAL : add webkit bridge for player" << pObject;
+
+		qDebug () << "METROLOGICAL : change (NULL) parent to pFrame";
+		pObject->setParent(pFrame);
+
+		qDebug () << "METROLOGICAL : add webkit bridge for object " << pObject;
 //TODO: connect to slot to keep the object accessible when page has changed
-//		pFrame->addToJavaScriptWindowObject("player", (Player*) pObject);
-		pFrame->addToJavaScriptWindowObject("player", pObject);
+		pFrame->addToJavaScriptWindowObject(_name_, pObject);
+
+
 	}
 }
 #endif
@@ -269,22 +290,19 @@ void MLWebKit::inspector()
  		{
 			qDebug () << "METROLOGICAL : show webinspector";
 
- 			pWebview->hide();
- 			pInspector->show();
-			pInspector->setFocus();
+			pWebview->hide();
+			pWebview->setEnabled(false);
+			pProxyWidget->show();
+			pProxyWidget->setEnabled(true);
  		}
  		else
  		{
 			qDebug () << "METROLOGICAL : hide webinspector";
 
- 			pInspector->hide();
+ 			pProxyWidget->hide();
+			pProxyWidget->setEnabled(false);
 			pWebview->show();
-
-			QApplication::setActiveWindow(pView);
-			pView->setFocus();
-
-//pWebview->reload();
-
+			pWebview->setEnabled(true);
  		}
  	}
 	else

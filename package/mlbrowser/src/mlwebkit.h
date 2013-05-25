@@ -13,6 +13,7 @@
 
 #ifdef _INSPECTOR_
 #include <QWebInspector>
+#include <QGraphicsProxyWidget>
 #endif
 
 class MLWebKit
@@ -25,8 +26,8 @@ public:
 	void show();
 	void hide();
 
-#ifdef _PLAYER_
-	void attach_object(QObject* pObject);
+#if defined (_PLAYER_) || defined (_PROPERTYCHANGER_)
+	void attach_object(QObject* pObject, QString _name_);
 #endif
 
 #ifdef _INSPECTOR_
@@ -50,6 +51,7 @@ private:
 #ifdef _INSPECTOR_
 	static MLWebKit*	pWebKit;
 	QWebInspector*		pInspector;
+	QGraphicsProxyWidget*	pProxyWidget;
 #endif
 };
 #endif
