@@ -1,6 +1,5 @@
-diff -urN qtbase-opensource-src-5.0.2.orig/mkspecs/devices/linux-rasp-pi-g++/qmake.conf qtbase-opensource-src-5.0.2/mkspecs/devices/linux-rasp-pi-g++/qmake.conf
---- qtbase-opensource-src-5.0.2.orig/mkspecs/devices/linux-rasp-pi-g++/qmake.conf	2013-04-09 02:10:52.000000000 +0200
-+++ qtbase-opensource-src-5.0.2/mkspecs/devices/linux-rasp-pi-g++/qmake.conf	2013-05-26 19:45:18.309486440 +0200
+--- a/mkspecs/devices/linux-rasp-pi-g++/qmake.conf	2013-04-09 02:10:52.000000000 +0200
++++ b/mkspecs/devices/linux-rasp-pi-g++/qmake.conf	2013-05-26 19:45:18.309486440 +0200
 @@ -6,15 +6,18 @@
  
  QT_QPA_DEFAULT_PLATFORM = wayland
