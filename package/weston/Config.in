@@ -13,8 +13,6 @@ config BR2_PACKAGE_WESTON
 	depends on BR2_PACKAGE_UDEV
 	# Runtime dependency
 	select BR2_PACKAGE_XKEYBOARD_CONFIG
-	# Make sure at least one backend is selected
-	select BR2_PACKAGE_WESTON_FBDEV
 	help
 	  Weston is the reference implementation of a Wayland
 	  compositor, and a useful compositor in its own right.
@@ -27,5 +25,9 @@ if BR2_PACKAGE_WESTON
 
 config BR2_PACKAGE_WESTON_FBDEV
 	bool "fbdev compositor"
+
+config BR2_PACKAGE_WESTON_RPI
+	bool "rpi compositor"
+	select BR2_PACKAGE_RPI_USERLAND
 
 endif

@@ -6,7 +6,11 @@
 
 WESTON_VERSION = 1.1.0
 WESTON_SITE = http://wayland.freedesktop.org/releases/
-WESTON_SOURCE = weston-$(WAYLAND_VERSION).tar.xz
+WESTON_SOURCE = weston-$(WESTON_VERSION).tar.xz
+#WESTON_VERSION = 354aaa47c122aa246443ab10626c0c1acee2f3af
+#WESTON_SITE = http://cgit.collabora.com/git/user/pq/weston.git/snapshot/
+#WESTON_SOURCE = weston-$(WESTON_VERSION).tar.gz
+#WESTON_AUTORECONF = YES
 WESTON_LICENSE = MIT
 WESTON_LICENSE_FILES = COPYING
 
@@ -14,14 +18,29 @@ WESTON_DEPENDENCIES = wayland libxkbcommon pixman libpng \
 	jpeg mtdev udev cairo
 WESTON_CONF_OPT = \
 	--disable-egl \
+	--disable-setuid-install \
 	--disable-xwayland \
+	--disable-xwayland-test \
 	--disable-x11-compositor \
 	--disable-drm-compositor \
 	--disable-wayland-compositor \
 	--disable-headless-compositor \
-	--disable-rpi-compositor \
 	--disable-weston-launch \
+	--disable-colord \
+	--disable-resize-optimization \
 	--disable-libunwind
+
+ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
+WESTON_CONF_OPT += \
+	--with-cairo-glesv2 \
+	--disable-simple-egl-clients \
+	--enable-rpi-compositor \
+	WESTON_NATIVE_BACKEND="rpi-backend.so"
+WESTON_DEPENDENCIES += rpi-userland
+else
+WESTON_CONF_OPT += \
+	--disable-rpi-compositor
+endif
 
 ifeq ($(BR2_PACKAGE_WESTON_FBDEV),y)
 WESTON_CONF_OPT += --enable-fbdev-compositor
