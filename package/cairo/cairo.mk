@@ -53,6 +53,14 @@ else
 	CAIRO_CONF_OPT += --disable-directfb
 endif
 
+ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
+	CAIRO_CONF_OPT += \
+		--enable-egl \
+		--enable-vg \
+		--enable-glesv2
+	CAIRO_DEPENDENCIES += rpi-userland
+endif
+
 ifeq ($(BR2_PACKAGE_XORG7),y)
 	CAIRO_CONF_OPT += --enable-xlib --enable-xcb --with-x
 	CAIRO_DEPENDENCIES += xlib_libX11 xlib_libXext
