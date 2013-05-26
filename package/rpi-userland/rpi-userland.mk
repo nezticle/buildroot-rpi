@@ -12,6 +12,7 @@ RPI_USERLAND_INSTALL_STAGING = YES
 RPI_USERLAND_CONF_OPT = -DVMCS_INSTALL_PREFIX=/usr -DCMAKE_C_FLAGS="$(TARGET_CFLAGS) -DNDEBUG"
 
 define RPI_USERLAND_POST_STAGING_PKGCONFIG
+	(cd $(STAGING_DIR)/usr/include; ln -sfn VG vg)
 	cp -f package/rpi-userland/bcm_host.pc $(STAGING_DIR)/usr/lib/pkgconfig/
 endef
 
