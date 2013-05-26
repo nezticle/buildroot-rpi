@@ -1,0 +1,26 @@
+diff -urN qtbase-opensource-src-5.0.2.orig/mkspecs/devices/linux-rasp-pi-g++/qmake.conf qtbase-opensource-src-5.0.2/mkspecs/devices/linux-rasp-pi-g++/qmake.conf
+--- qtbase-opensource-src-5.0.2.orig/mkspecs/devices/linux-rasp-pi-g++/qmake.conf	2013-04-09 02:10:52.000000000 +0200
++++ qtbase-opensource-src-5.0.2/mkspecs/devices/linux-rasp-pi-g++/qmake.conf	2013-05-26 19:45:18.309486440 +0200
+@@ -6,15 +6,18 @@
+ 
+ QT_QPA_DEFAULT_PLATFORM = wayland
+ 
+-QMAKE_LFLAGS            += -Wl,-rpath-link,$$[QT_SYSROOT]/opt/vc/lib
++QMAKE_LFLAGS            += -Wl,-rpath-link,$$[QT_SYSROOT]/usr/lib
+ 
+-QMAKE_LIBDIR_OPENGL_ES2 = $$[QT_SYSROOT]/opt/vc/lib
+-QMAKE_LIBDIR_EGL        = $$QMAKE_LIBDIR_OPENGL_ES2
++QMAKE_LIBDIR_EGL        = $$[QT_SYSROOT]/usr/lib
++QMAKE_LIBDIR_OPENGL_ES2 = $$QMAKE_LIBDIR_EGL
++QMAKE_LIBDIR_OPENVG     = $$QMAKE_LIBDIR_EGL
+ 
+-QMAKE_INCDIR_EGL        = $$[QT_SYSROOT]/opt/vc/include $$[QT_SYSROOT]/opt/vc/include/interface/vcos/pthreads
++QMAKE_INCDIR_EGL        = $$[QT_SYSROOT]/usr/include $$[QT_SYSROOT]/usr/include/interface/vcos/pthreads $$[QT_SYSROOT]/usr/include/interface/vmcs_host/linux
+ QMAKE_INCDIR_OPENGL_ES2 = $${QMAKE_INCDIR_EGL}
++QMAKE_INCDIR_OPENVG     = $${QMAKE_INCDIR_EGL}
+ 
+ QMAKE_LIBS_EGL          = -lEGL -lGLESv2
++QMAKE_LIBS_OPENVG       = -lOpenVG $${QMAKE_LIBS_EGL}
+ 
+ contains(DISTRO, squeeze) {
+     #Debian Squeeze: Legacy everything
