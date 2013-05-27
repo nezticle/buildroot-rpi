@@ -4,9 +4,9 @@
 #
 #############################################################
 
-MLBROWSER_VERSION = 1.1.0
-MLBROWSER_SITE_METHOD = local
-MLBROWSER_SITE = $(TOPDIR)/package/mlbrowser/src
+MLBROWSER_VERSION = b25644fe894613177c1b9bc81bd63e775780b5a8
+MLBROWSER_SITE_METHOD = git
+MLBROWSER_SITE = git
 
 ifeq ($(BR2_PACKAGE_QT5WEBKIT),y)
 MLBROWSER_DEPENDENCIES = qt5webkit
@@ -23,6 +23,7 @@ define MLBROWSER_CONFIGURE_CMDS
 			DEFINES+=_BROWSER_ \
 			DEFINES+=_MOUSE_ \
 			DEFINES+=_PROPERTYCHANGER_ \
+			./src/mlbrowser.pro \
 	)
 endef
 
