@@ -34,6 +34,7 @@ define QT5WEBKIT_CONFIGURE_CMDS
 			WEBKIT_CONFIG-=svg \
 			CONFIG+=release \
 			$(DEBUG_CONFIG)\
+			DEFINES+=_GSTREAMER_QOS_ \
 	)
 endef
 
