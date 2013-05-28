@@ -21,13 +21,18 @@ QT5WEBKIT_LICENSE = Commercial license
 QT5WEBKIT_REDISTRIBUTE = NO
 endif
 
+ifeq ($(BR2_ENABLE_DEBUG),y)
+	CONFIG+=debug
+else
+	CONFIG-=debug
+endif
+
 define QT5WEBKIT_CONFIGURE_CMDS
 	(cd $(@D); \
 		$(TARGET_MAKE_ENV) \
 		$(HOST_DIR)/usr/bin/qmake \
 			WEBKIT_CONFIG-=svg \
 			CONFIG+=release \
-			CONFIG-=debug \
 	)
 endef
 
