@@ -22,17 +22,20 @@ QT5WEBKIT_REDISTRIBUTE = NO
 endif
 
 ifeq ($(BR2_ENABLE_DEBUG),y)
-	CONFIG+=debug
+	DEBUG_CONFIG="CONFIG+=debug"
 else
-	CONFIG-=debug
+	DEBUG_CONFIG="CONFIG-=debug"
 endif
 
 define QT5WEBKIT_CONFIGURE_CMDS
+	echo $(CONFIG);
 	(cd $(@D); \
 		$(TARGET_MAKE_ENV) \
 		$(HOST_DIR)/usr/bin/qmake \
+			DEFINES+=_GSTREAMER_QOS_ \
 			WEBKIT_CONFIG-=svg \
 			CONFIG+=release \
+			$(DEBUG_CONFIG)\
 	)
 endef
 
