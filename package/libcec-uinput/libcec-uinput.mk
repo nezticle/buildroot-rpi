@@ -3,7 +3,7 @@
 # libcec-uinput
 #
 #############################################################
-LIBCEC_UINPUT_VERSION = cb086865869402fdabe3b9142ea7e6ea3c699c1b
+LIBCEC_UINPUT_VERSION = 70b3f2e599f8805c5a9e6d15be3078ba25c433f8
 LIBCEC_UINPUT_SITE = git://github.com/bramp/libcec-daemon.git
 LIBCEC_UINPUT_INSTALL_STAGING = YES
 LIBCEC_UINPUT_INSTALL_TARGET = YES
