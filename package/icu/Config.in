@@ -9,6 +9,7 @@ config BR2_PACKAGE_ICU
 
 config BR2_PACKAGE_ICU_MINIMIZED
 	bool "minimized"
+	depends on !BR2_ENABLE_DEBUG
 	depends on BR2_PACKAGE_ICU
 	help
 	  Uses a minimized icu data set.
