@@ -28,11 +28,9 @@ else
 endif
 
 define QT5WEBKIT_CONFIGURE_CMDS
-	echo $(CONFIG);
 	(cd $(@D); \
 		$(TARGET_MAKE_ENV) \
 		$(HOST_DIR)/usr/bin/qmake \
-			DEFINES+=_GSTREAMER_QOS_ \
 			WEBKIT_CONFIG-=svg \
 			CONFIG+=release \
 			$(DEBUG_CONFIG)\
