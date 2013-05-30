@@ -168,7 +168,6 @@ define QT5BASE_CONFIG_SET
 endef
 
 define QT5BASE_WAYLANDSCANNER_CONFIG_SET
-echo "configure linux.conf"
 	$(SED) 's%^$(1).*%$(1) = $(2)%g' $(@D)/mkspecs/common/linux.conf
 endef
 
