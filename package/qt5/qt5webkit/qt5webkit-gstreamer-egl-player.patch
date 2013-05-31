@@ -602,7 +602,7 @@
      guint64 decodedFrames = 0;
 -    if (m_fpsSink)
 -        g_object_get(m_fpsSink, "frames-rendered", &decodedFrames, NULL);
-++    /* FIXME: Count frames */
++    /* FIXME: Count frames */
      return static_cast<unsigned>(decodedFrames);
  }
  
@@ -611,7 +611,7 @@
      guint64 framesDropped = 0;
 -    if (m_fpsSink)
 -        g_object_get(m_fpsSink, "frames-dropped", &framesDropped, NULL);
-++    /* FIXME: Count frames */
++    /* FIXME: Count frames */
      return static_cast<unsigned>(framesDropped);
  }
  
@@ -620,7 +620,7 @@
      gint64 position = 0;
  
 -    if (gst_element_query(m_webkitVideoSink, query))
-++    if (gst_element_query(m_videoSink, query))
++    if (gst_element_query(m_videoSink, query))
          gst_query_parse_position(query, 0, &position);
  
      gst_query_unref(query);
@@ -860,7 +860,7 @@
 +    g_signal_connect(m_videoSinkPad.get(), "notify::caps", G_CALLBACK(mediaPlayerPrivateVideoSinkCapsChangedCallback), this);
 +    gst_pad_add_event_probe(m_videoSinkPad.get(), G_CALLBACK (mediaPlayerPrivateVideoEventCallback), this);
 + 
-+    g_object_set(m_playBin, "video-sink", gst_object_ref (m_videoSink), NULL);
++    g_object_set(m_playBin.get(), "video-sink", gst_object_ref (m_videoSink), NULL);
  }
  
  }
