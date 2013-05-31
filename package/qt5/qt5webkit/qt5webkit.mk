@@ -4,10 +4,11 @@
 #
 #############################################################
 
-QT5WEBKIT_VERSION = $(QT5_VERSION)
-QT5WEBKIT_SITE = $(QT5_SITE)
-QT5WEBKIT_SOURCE = qtwebkit-opensource-src-$(QT5WEBKIT_VERSION).tar.xz
+QT5WEBKIT_VERSION = ac00a345b23686aa458539dde0cb3711bed84de3
+QT5WEBKIT_SITE = git://gitorious.org/qt/qtwebkit.git
+
 QT5WEBKIT_DEPENDENCIES = qt5base qt5declarative sqlite host-ruby host-gperf
+
 QT5WEBKIT_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_QT5BASE_LICENSE_APPROVED),y)

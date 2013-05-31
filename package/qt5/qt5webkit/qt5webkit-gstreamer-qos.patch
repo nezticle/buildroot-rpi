@@ -1,12 +1,14 @@
---- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-28 09:54:34.708458865 +0200
-+++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-28 09:55:52.340455603 +0200
-@@ -2169,6 +2169,9 @@
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-31 12:51:12.580211672 +0200
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-31 12:52:59.800202804 +0200
+@@ -2172,7 +2172,10 @@
      m_videoSink = gst_element_factory_make("fakesink", "vsink");
      g_object_set (m_videoSink, "sync", TRUE, "silent", TRUE,
          "enable-last-buffer", FALSE,
+-        "max-lateness", 20 * GST_MSECOND, "signal-handoffs", TRUE, NULL);
 +#ifdef _GSTREAMER_QOS_
 +        "qos", TRUE,
 +#endif
-         "max-lateness", 20 * GST_MSECOND, "signal-handoffs", TRUE, NULL);
++    "max-lateness", 20 * GST_MSECOND, "signal-handoffs", TRUE, NULL);
      g_signal_connect (m_videoSink, "preroll-handoff", G_CALLBACK (mediaPlayerPrivateVideoPrerollCallback), this);
      g_signal_connect (m_videoSink, "handoff", G_CALLBACK (mediaPlayerPrivateVideoBufferCallback), this);
+
