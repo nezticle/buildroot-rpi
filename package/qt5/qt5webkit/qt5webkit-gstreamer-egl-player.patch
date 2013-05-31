@@ -124,8 +124,8 @@
      , m_webkitAudioSink(0)
      , m_totalBytes(-1)
      , m_originalPreloadWasAutoAndWasOverridden(false)
-{
-+#if USE(ACCELERATED_COMPOSITING) && USE(TEXTURE_MAPPER_GL)
+-{
++{#if USE(ACCELERATED_COMPOSITING) && USE(TEXTURE_MAPPER_GL)
 +    , m_texture(0)
 +    , m_textureMapper(0)
 +#endif
