@@ -133,7 +133,7 @@
 +    , m_queueLastObject(0)
 +    , m_lastEGLMemory(0)
 +    , m_egl_details(0)
-+(
++
      if (initializeGStreamerAndRegisterWebKitElements())
          createGSTPlayBin();
 +
