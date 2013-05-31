@@ -4,10 +4,12 @@
 #
 #############################################################
 
-QT5SCRIPT_VERSION = $(QT5_VERSION)
-QT5SCRIPT_SITE = $(QT5_SITE)
-QT5SCRIPT_SOURCE = qtscript-opensource-src-$(QT5SCRIPT_VERSION).tar.xz
+QT5SCRIPT_VERSION = e2415c8b957a41345284f56d11cd276d5e4e9267
+QT5SCRIPT_SITE = git://gitorious.org/qt/qtscript.git
+QT5SCRIPT_SITE_METHOD = git
+
 QT5SCRIPT_DEPENDENCIES = qt5base
+
 QT5SCRIPT_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_QT5BASE_LICENSE_APPROVED),y)
