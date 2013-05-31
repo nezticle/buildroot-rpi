@@ -26,5 +26,6 @@ source "package/qt5/qt5script/Config.in"
 source "package/qt5/qt5svg/Config.in"
 source "package/qt5/qt5webkit/Config.in"
 source "package/qt5/qt5xmlpatterns/Config.in"
+source "package/qt5/qt5wayland/Config.in"
 source "package/qt5/qt5wktst/Config.in"
 endif

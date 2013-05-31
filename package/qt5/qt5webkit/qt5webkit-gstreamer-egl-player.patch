@@ -1,5 +1,5 @@
---- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-04-09 02:11:44.000000000 +0200
-+++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-16 20:58:36.090204327 +0200
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-31 11:16:23.580434087 +0200
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-31 12:14:20.884295339 +0200
 @@ -35,8 +35,6 @@
  #include "GStreamerVersioning.h"
  #include "GraphicsContext.h"
@@ -37,12 +37,13 @@
  // GstPlayFlags flags from playbin2. It is the policy of GStreamer to
  // not publicly expose element-specific enums. That's why this
  // GstPlayFlags enum has been copied here.
-@@ -74,11 +75,14 @@
-     GST_PLAY_FLAG_BUFFERING     = 0x000000100
- } GstPlayFlags;
- 
+@@ -79,13 +80,14 @@
+ // 0.10 that was using 100 instead of GST_FORMAT_PERCENT_MAX. This was
+ // corrected in 1.0. gst_query_parse_buffering_range worked as
+ // expected with GST_FORMAT_PERCENT_MAX in both cases.
 -#ifdef GST_API_VERSION_1
 -static const char* gPlaybinName = "playbin";
+-static const gint64 gPercentMax = GST_FORMAT_PERCENT_MAX;
 -#else
 +struct _EGLDetails {
 +    EGLDisplay display;
@@ -50,13 +51,13 @@
 +    EGLSurface draw;
 +    EGLSurface read;
 +};
-+
  static const char* gPlaybinName = "playbin2";
+ static const gint64 gPercentMax = 100;
 -#endif
  
  GST_DEBUG_CATEGORY_STATIC(webkit_media_player_debug);
  #define GST_CAT_DEFAULT webkit_media_player_debug
-@@ -163,9 +167,42 @@
+@@ -170,9 +172,42 @@
      return FALSE;
  }
  
@@ -76,13 +77,13 @@
 +}
 +
 +static void mediaPlayerPrivateVideoBufferCallback(GstElement* fakesink, GstBuffer* buffer, GstPad* pad, MediaPlayerPrivateGStreamer* player)
- {
--    playerPrivate->triggerRepaint(buffer);
++{
 +    player->queueObject(GST_MINI_OBJECT_CAST (gst_buffer_ref (buffer)), TRUE);
 +}
 +
 +static gboolean mediaPlayerPrivateVideoEventCallback(GstPad* pad, GstEvent* event, MediaPlayerPrivateGStreamer* player)
-+{
+ {
+-    playerPrivate->triggerRepaint(buffer);
 +    switch (GST_EVENT_TYPE (event)) {
 +        case GST_EVENT_FLUSH_START:
 +            player->queueFlushStart();
@@ -101,17 +102,17 @@
  }
  
  PassOwnPtr<MediaPlayerPrivateInterface> MediaPlayerPrivateGStreamer::create(MediaPlayer* player)
-@@ -205,8 +242,7 @@
+@@ -211,8 +246,7 @@
+ 
  MediaPlayerPrivateGStreamer::MediaPlayerPrivateGStreamer(MediaPlayer* player)
      : m_player(player)
-     , m_playBin(0)
 -    , m_webkitVideoSink(0)
 -    , m_fpsSink(0)
 +    , m_videoSink(0)
      , m_source(0)
      , m_seekTime(0)
      , m_changingRate(false)
-@@ -216,7 +252,6 @@
+@@ -222,7 +256,6 @@
      , m_readyState(MediaPlayer::HaveNothing)
      , m_isStreaming(false)
      , m_size(IntSize())
@@ -119,10 +120,11 @@
      , m_mediaLocations(0)
      , m_mediaLocationCurrentIndex(0)
      , m_resetPipeline(false)
-@@ -243,31 +278,47 @@
+@@ -249,9 +282,22 @@
      , m_webkitAudioSink(0)
      , m_totalBytes(-1)
      , m_originalPreloadWasAutoAndWasOverridden(false)
+-{
 +#if USE(ACCELERATED_COMPOSITING) && USE(TEXTURE_MAPPER_GL)
 +    , m_texture(0)
 +    , m_textureMapper(0)
@@ -131,8 +133,7 @@
 +    , m_queueLastObject(0)
 +    , m_lastEGLMemory(0)
 +    , m_egl_details(0)
-+
- {
++{
      if (initializeGStreamerAndRegisterWebKitElements())
          createGSTPlayBin();
 +
@@ -143,10 +144,7 @@
  }
  
  MediaPlayerPrivateGStreamer::~MediaPlayerPrivateGStreamer()
- {
-+    LOG_MEDIA_MESSAGE("Player destructor");
-+    queueFlushStart();
-+    
+@@ -259,21 +305,20 @@
      if (m_fillTimer.isActive())
          m_fillTimer.stop();
  
@@ -175,8 +173,8 @@
 -#endif
  
      if (m_playBin) {
-         gst_element_set_state(m_playBin, GST_STATE_NULL);
-@@ -288,6 +339,25 @@
+         gst_element_set_state(m_playBin.get(), GST_STATE_NULL);
+@@ -293,6 +338,25 @@
  
      if (m_audioTimerHandler)
          g_source_remove(m_audioTimerHandler);
@@ -202,7 +200,7 @@
  }
  
  void MediaPlayerPrivateGStreamer::load(const String& url)
-@@ -392,6 +462,8 @@
+@@ -397,6 +461,8 @@
  
  void MediaPlayerPrivateGStreamer::prepareToPlay()
  {
@@ -211,7 +209,7 @@
      m_isEndReached = false;
      m_seeking = false;
  
-@@ -414,8 +486,21 @@
+@@ -419,9 +485,22 @@
      if (m_isEndReached)
          return;
  
@@ -227,25 +225,28 @@
 +
      if (changePipelineState(GST_STATE_PAUSED))
          LOG_MEDIA_MESSAGE("Pause");
-+
-+    m_queueFlushing = false;
-+    g_mutex_unlock (m_queueLock);
- }
+-}
++ 
++   m_queueFlushing = false;
++   g_mutex_unlock (m_queueLock);
++} 
  
  float MediaPlayerPrivateGStreamer::duration() const
-@@ -436,11 +521,7 @@
+ {
+@@ -441,11 +520,8 @@
      GstFormat timeFormat = GST_FORMAT_TIME;
      gint64 timeLength = 0;
  
 -#ifdef GST_API_VERSION_1
--    bool failure = !gst_element_query_duration(m_playBin, timeFormat, &timeLength) || static_cast<guint64>(timeLength) == GST_CLOCK_TIME_NONE;
+-    bool failure = !gst_element_query_duration(m_playBin.get(), timeFormat, &timeLength) || static_cast<guint64>(timeLength) == GST_CLOCK_TIME_NONE;
 -#else
-     bool failure = !gst_element_query_duration(m_playBin, &timeFormat, &timeLength) || timeFormat != GST_FORMAT_TIME || static_cast<guint64>(timeLength) == GST_CLOCK_TIME_NONE;
+     bool failure = !gst_element_query_duration(m_playBin.get(), &timeFormat, &timeLength) || timeFormat != GST_FORMAT_TIME || static_cast<guint64>(timeLength) == GST_CLOCK_TIME_NONE;
 -#endif
++
      if (failure) {
          LOG_MEDIA_MESSAGE("Time duration query failed for %s", m_url.string().utf8().data());
          return numeric_limits<float>::infinity();
-@@ -857,11 +938,7 @@
+@@ -862,11 +938,7 @@
      case GST_MESSAGE_BUFFERING:
          processBufferingStats(message);
          break;
@@ -257,7 +258,7 @@
          LOG_MEDIA_MESSAGE("Duration changed");
          durationChanged();
          break;
-@@ -873,6 +950,288 @@
+@@ -878,6 +950,288 @@
      return TRUE;
  }
  
@@ -546,7 +547,7 @@
  void MediaPlayerPrivateGStreamer::processBufferingStats(GstMessage* message)
  {
      // This is the immediate buffering that needs to happen so we have
-@@ -999,11 +1358,7 @@
+@@ -1004,11 +1358,7 @@
  
      GstFormat fmt = GST_FORMAT_BYTES;
      gint64 length = 0;
@@ -558,7 +559,7 @@
          LOG_MEDIA_MESSAGE("totalBytes %" G_GINT64_FORMAT, length);
          m_totalBytes = static_cast<unsigned>(length);
          m_isStreaming = !length;
-@@ -1015,17 +1370,6 @@
+@@ -1020,17 +1370,6 @@
      GstIterator* iter = gst_element_iterate_src_pads(m_source.get());
      bool done = false;
      while (!done) {
@@ -576,7 +577,7 @@
          gpointer data;
  
          switch (gst_iterator_next(iter, &data)) {
-@@ -1036,7 +1380,6 @@
+@@ -1041,7 +1380,6 @@
                  length = padLength;
              break;
          }
@@ -584,7 +585,7 @@
          case GST_ITERATOR_RESYNC:
              gst_iterator_resync(iter);
              break;
-@@ -1046,10 +1389,6 @@
+@@ -1051,10 +1389,6 @@
              done = true;
              break;
          }
@@ -595,7 +596,7 @@
      }
  
      gst_iterator_free(iter);
-@@ -1063,16 +1402,14 @@
+@@ -1068,16 +1402,14 @@
  unsigned MediaPlayerPrivateGStreamer::decodedFrameCount() const
  {
      guint64 decodedFrames = 0;
@@ -614,7 +615,7 @@
      return static_cast<unsigned>(framesDropped);
  }
  
-@@ -1093,7 +1430,7 @@
+@@ -1098,7 +1430,7 @@
      GstQuery* query = gst_query_new_position(GST_FORMAT_BYTES);
      gint64 position = 0;
  
@@ -623,28 +624,35 @@
          gst_query_parse_position(query, 0, &position);
  
      gst_query_unref(query);
-@@ -1209,8 +1546,7 @@
-                 m_networkState = MediaPlayer::Loading;
+@@ -1117,7 +1449,6 @@
+ 
+ }
+ 
+-
+ void MediaPlayerPrivateGStreamer::sourceChanged()
+ {
+     GstElement* srcPtr = 0;
+@@ -1215,7 +1546,7 @@
  
                  LOG_MEDIA_MESSAGE("[Buffering] Pausing stream for buffering.");
--
--                gst_element_set_state(m_playBin, GST_STATE_PAUSED);
+ 
+-                gst_element_set_state(m_playBin.get(), GST_STATE_PAUSED);
 +                pause();
              }
          } else
              m_paused = true;
-@@ -1446,7 +1782,10 @@
+@@ -1451,7 +1782,10 @@
  
      if (!m_player->mediaPlayerClient()->mediaPlayerIsLooping()) {
          m_paused = true;
 +        LOG_MEDIA_MESSAGE("Setting pipeline to NULL state");
 +        queueFlushStart();
-         gst_element_set_state(m_playBin, GST_STATE_NULL);
+         gst_element_set_state(m_playBin.get(), GST_STATE_NULL);
 +        queueFlushStop();
      }
  }
  
-@@ -1551,36 +1890,60 @@
+@@ -1556,37 +1890,61 @@
  {
  }
  
@@ -658,41 +666,43 @@
 -
  void MediaPlayerPrivateGStreamer::paint(GraphicsContext* context, const IntRect& rect)
  {
--    if (context->paintingDisabled())
 +#if USE(ACCELERATED_COMPOSITING) && USE(TEXTURE_MAPPER_GL)
 +    if (m_texture) {
-         return;
++        return;
 +    }
 +#endif
++ 
+     if (context->paintingDisabled())
+         return;
  
--    if (!m_player->visible())
-+    if (context->paintingDisabled())
+     if (!m_player->visible())
          return;
  
 -    if (!m_buffer)
-+    if (!m_player->visible())
-         return;
- 
+-        return;
+-
      GRefPtr<GstCaps> caps = webkitGstGetPadCaps(m_videoSinkPad.get());
      if (!caps)
          return;
 +}
-+
+ 
+-    RefPtr<ImageGStreamer> gstImage = ImageGStreamer::createImage(m_buffer, caps.get());
+-    if (!gstImage)
+-        return;
+-
+-    context->drawImage(reinterpret_cast<Image*>(gstImage->image().get()), ColorSpaceSRGB,
+-                       rect, gstImage->rect(), CompositeCopy, DoNotRespectImageOrientation, false);
 +#if USE(ACCELERATED_COMPOSITING) && USE(TEXTURE_MAPPER_GL)
 +bool MediaPlayerPrivateGStreamer::supportsAcceleratedRendering() const
 +{
 +    return TRUE;
-+}
+ }
  
--    RefPtr<ImageGStreamer> gstImage = ImageGStreamer::createImage(m_buffer, caps.get());
--    if (!gstImage)
 +void MediaPlayerPrivateGStreamer::paintToTextureMapper(TextureMapper* textureMapper, const FloatRect& targetRect, const TransformationMatrix& matrix, float opacity, BitmapTexture* mask)
 +{
 +    if (textureMapper->accelerationMode() != TextureMapper::OpenGLMode)
-         return;
- 
--    context->drawImage(reinterpret_cast<Image*>(gstImage->image().get()), ColorSpaceSRGB,
--                       rect, gstImage->rect(), CompositeCopy, DoNotRespectImageOrientation, false);
++         return;
++ 
 +    if (textureMapper != m_textureMapper) {
 +        m_textureMapper = textureMapper; // @TODO Is this a sane enough?
 +    }
@@ -715,12 +725,13 @@
 +        mmatrix.setM42(targetRect.maxY() + mmatrix.m42());
 +        textureMapper->drawTexture(*m_texture.get(), targetRect, mmatrix, opacity);
 +    }
- }
++}
 +#endif
- 
++ 
  static HashSet<String> mimeTypeCache()
  {
-@@ -1717,10 +2080,6 @@
+     initializeGStreamerAndRegisterWebKitElements();
+@@ -1722,10 +2080,6 @@
  PlatformMedia MediaPlayerPrivateGStreamer::platformMedia() const
  {
      PlatformMedia p;
@@ -731,22 +742,22 @@
      return p;
  }
  
-@@ -1764,11 +2123,8 @@
-     ASSERT(!m_playBin);
+@@ -1772,11 +2126,8 @@
+     // we should not adopt.
      m_playBin = gst_element_factory_make(gPlaybinName, "play");
  
 -#ifndef GST_API_VERSION_1
--    m_gstGWorld = GStreamerGWorld::createGWorld(m_playBin);
+-    m_gstGWorld = GStreamerGWorld::createGWorld(m_playBin.get());
 -#endif
 -
-     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_playBin));
+     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_playBin.get()));
 +    gst_bus_set_sync_handler (bus, (GstBusSyncHandler) mediaPlayerPrivateSyncMessageCallback, this);
      gst_bus_add_signal_watch(bus);
      g_signal_connect(bus, "message", G_CALLBACK(mediaPlayerPrivateMessageCallback), this);
      gst_object_unref(bus);
-@@ -1781,96 +2137,18 @@
-     g_signal_connect(m_playBin, "video-changed", G_CALLBACK(mediaPlayerPrivateVideoChangedCallback), this);
-     g_signal_connect(m_playBin, "audio-changed", G_CALLBACK(mediaPlayerPrivateAudioChangedCallback), this);
+@@ -1789,96 +2140,18 @@
+     g_signal_connect(m_playBin.get(), "video-changed", G_CALLBACK(mediaPlayerPrivateVideoChangedCallback), this);
+     g_signal_connect(m_playBin.get(), "audio-changed", G_CALLBACK(mediaPlayerPrivateAudioChangedCallback), this);
  
 -#ifndef GST_API_VERSION_1
 -    m_webkitVideoSink = webkitVideoSinkNew(m_gstGWorld.get());
@@ -829,14 +840,15 @@
 -    gst_element_add_pad(m_videoSinkBin, gst_ghost_pad_new("sink", pad.get()));
 -
 -    // Set the bin as video sink of playbin.
--    g_object_set(m_playBin, "video-sink", m_videoSinkBin, NULL);
+-    g_object_set(m_playBin.get(), "video-sink", m_videoSinkBin, NULL);
 -#else
--    g_object_set(m_playBin, "video-sink", actualVideoSink, NULL);
+-    g_object_set(m_playBin.get(), "video-sink", actualVideoSink, NULL);
 -#endif
 -
 -    GRefPtr<GstPad> videoSinkPad = adoptGRef(gst_element_get_static_pad(m_webkitVideoSink, "sink"));
 -    if (videoSinkPad)
 -        g_signal_connect(videoSinkPad.get(), "notify::caps", G_CALLBACK(mediaPlayerPrivateVideoSinkCapsChangedCallback), this);
+-
 +    m_videoSink = gst_element_factory_make("fakesink", "vsink");
 +    g_object_set (m_videoSink, "sync", TRUE, "silent", TRUE,
 +        "enable-last-buffer", FALSE,
@@ -847,14 +859,15 @@
 +    m_videoSinkPad = adoptGRef(gst_element_get_static_pad(m_videoSink, "sink"));
 +    g_signal_connect(m_videoSinkPad.get(), "notify::caps", G_CALLBACK(mediaPlayerPrivateVideoSinkCapsChangedCallback), this);
 +    gst_pad_add_event_probe(m_videoSinkPad.get(), G_CALLBACK (mediaPlayerPrivateVideoEventCallback), this);
- 
-+    g_object_set(m_playBin, "video-sink", gst_object_ref (m_videoSink), NULL);
++ 
++    g_object_set(m_playBin.get(), "video-sink", gst_object_ref (m_videoSink), NULL);
  }
  
  }
---- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-04-09 02:11:44.000000000 +0200
-+++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-05-16 20:58:36.090204327 +0200
-@@ -32,11 +32,20 @@
+
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-05-31 12:14:48.924297128 +0200
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h	2013-05-31 12:20:57.948281307 +0200
+@@ -32,11 +32,19 @@
  #include <gst/gst.h>
  #include <wtf/Forward.h>
  
@@ -863,7 +876,6 @@
 +#include "texmap/TextureMapper.h"
 +#include "texmap/TextureMapperGL.h"
 +#endif
-+
  typedef struct _GstBuffer GstBuffer;
  typedef struct _GstMessage GstMessage;
  typedef struct _GstElement GstElement;
@@ -876,7 +888,7 @@
  namespace WebCore {
  
  class GraphicsContext;
-@@ -45,8 +54,11 @@
+@@ -45,8 +53,11 @@
  class GStreamerGWorld;
  class MediaPlayerPrivateGStreamer;
  
@@ -890,7 +902,7 @@
          public:
              ~MediaPlayerPrivateGStreamer();
              static void registerMediaEngine(MediaEngineRegistrar);
-@@ -124,8 +136,19 @@
+@@ -124,8 +135,20 @@
              unsigned audioDecodedByteCount() const;
              unsigned videoDecodedByteCount() const;
  
@@ -899,6 +911,7 @@
 +            virtual bool supportsAcceleratedRendering() const;
 +            virtual void paintToTextureMapper(TextureMapper*, const FloatRect& targetRect, const TransformationMatrix&, float opacity, BitmapTexture* mask);
 +#endif
++ 
              MediaPlayer::MovieLoadType movieLoadType() const;
  
 +            gboolean queueObject(GstMiniObject * obj, gboolean synchronous);
@@ -920,7 +933,7 @@
 +
          private:
              MediaPlayer* m_player;
-             GstElement* m_playBin;
+             GRefPtr<GstElement> m_playBin;
 -            GstElement* m_webkitVideoSink;
 -            GstElement* m_videoSinkBin;
 -            GstElement* m_fpsSink;
@@ -964,9 +977,9 @@
 +            EGLDetails *m_egl_details;
      };
  }
- 
---- a/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-04-09 02:11:44.000000000 +0200
-+++ b/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-05-16 20:57:57.314202740 +0200
+
+--- a/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-05-31 12:21:29.068276589 +0200
++++ b/Source/WebCore/platform/graphics/texmap/GraphicsLayerTextureMapper.h	2013-05-31 12:22:57.348274921 +0200
 @@ -68,6 +68,7 @@
      virtual void setContentsToImage(Image*);
      virtual void setContentsToMedia(PlatformLayer*);
@@ -975,14 +988,16 @@
      virtual void flushCompositingState(const FloatRect&);
      virtual void flushCompositingStateForThisLayerOnly();
      virtual void setName(const String& name);
---- a/Source/WebCore/rendering/RenderLayerBacking.cpp	2013-04-09 02:11:43.000000000 +0200
-+++ b/Source/WebCore/rendering/RenderLayerBacking.cpp	2013-05-16 20:57:57.314202740 +0200
-@@ -1477,8 +1477,13 @@
+
+--- a/Source/WebCore/rendering/RenderLayerBacking.cpp	2013-05-31 12:23:24.932271294 +0200
++++ b/Source/WebCore/rendering/RenderLayerBacking.cpp.new	2013-05-31 12:26:46.604264266 +0200
+@@ -1477,9 +1477,14 @@
  {
      ASSERT(!paintsIntoCompositedAncestor());
      
 -    if (m_graphicsLayer && m_graphicsLayer->drawsContent())
 -        m_graphicsLayer->setNeedsDisplay();
+-    
 +    if (m_graphicsLayer) {
 +        if (m_graphicsLayer->hasContentsLayer()) {
 +            m_graphicsLayer->setContentsNeedsDisplay();
@@ -990,9 +1005,10 @@
 +            m_graphicsLayer->setNeedsDisplay();
 +        }
 +    }
-     
++ 
      if (m_foregroundLayer && m_foregroundLayer->drawsContent())
          m_foregroundLayer->setNeedsDisplay();
+ 
 @@ -1495,10 +1500,14 @@
  {
      ASSERT(!paintsIntoCompositedAncestor());
@@ -1012,14 +1028,15 @@
      }
  
      if (m_foregroundLayer && m_foregroundLayer->drawsContent()) {
---- a/Source/WebCore/WebCore.pri	2013-04-09 02:11:45.000000000 +0200
-+++ b/Source/WebCore/WebCore.pri	2013-05-16 20:57:57.314202740 +0200
-@@ -167,7 +167,7 @@
- 
+
+--- a/Source/WebCore/WebCore.pri	2013-05-31 12:27:22.732263340 +0200
++++ a/Source/WebCore/WebCore.pri	2013-05-31 12:28:52.268260673 +0200
+@@ -168,7 +168,7 @@
  use?(GSTREAMER) {
      DEFINES += ENABLE_GLIB_SUPPORT=1
--    PKGCONFIG += glib-2.0 gio-2.0 gstreamer-0.10 gstreamer-app-0.10 gstreamer-base-0.10 gstreamer-interfaces-0.10 gstreamer-pbutils-0.10 gstreamer-plugins-base-0.10 gstreamer-video-0.10
+     use?(GSTREAMER010) {
+-        PKGCONFIG += glib-2.0 gio-2.0 gstreamer-0.10 gstreamer-app-0.10 gstreamer-base-0.10 gstreamer-interfaces-0.10 gstreamer-pbutils-0.10 gstreamer-plugins-base-0.10 gstreamer-video-0.10
 +    PKGCONFIG += glib-2.0 gio-2.0 gstreamer-0.10 gstreamer-app-0.10 gstreamer-base-0.10 gstreamer-interfaces-0.10 gstreamer-pbutils-0.10 gstreamer-plugins-base-0.10 gstreamer-video-0.10 gstreamer-egl-0.10
- }
- 
- enable?(VIDEO) {
+     } else {
+         DEFINES += GST_API_VERSION=1.0
+         DEFINES += GST_API_VERSION_1

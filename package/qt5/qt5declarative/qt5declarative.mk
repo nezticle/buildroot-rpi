@@ -4,10 +4,12 @@
 #
 #############################################################
 
-QT5DECLARATIVE_VERSION = $(QT5_VERSION)
-QT5DECLARATIVE_SITE = $(QT5_SITE)
-QT5DECLARATIVE_SOURCE = qtdeclarative-opensource-src-$(QT5DECLARATIVE_VERSION).tar.xz
+QT5DECLARATIVE_VERSION = e840b9e2c56a786ef7c4232b8fb2f1df1b285da4
+QT5DECLARATIVE_SITE = git://gitorious.org/qt/qtdeclarative.git
+QT5DECLARATIVE_SITE_METHOD = git
+
 QT5DECLARATIVE_DEPENDENCIES = qt5base qt5xmlpatterns qt5jsbackend
+
 QT5DECLARATIVE_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_QT5BASE_LICENSE_APPROVED),y)
