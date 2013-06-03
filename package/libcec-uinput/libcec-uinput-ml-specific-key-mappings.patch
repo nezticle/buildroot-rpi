@@ -6,7 +6,7 @@
  		uinputCecMap[CEC_USER_CONTROL_CODE_AN_RETURN                   ] = 0;
 +/* ML specific mapping */
 +		uinputCecMap[CEC_OPCODE_USER_CONTROL_PRESSED                   ] = KEY_ENTER;
-+		uinputCecMap[CEC_OPCODE_USER_CONTROL_PRESSED                   ] = KEY_ENTER;
++		uinputCecMap[CEC_USER_CONTROL_CODE_AN_RETURN                   ] = KEY_ENTER;
  	}
  
  	return uinputCecMap;
