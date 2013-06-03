@@ -1,4 +1,4 @@
-BuildRoot for Raspberry Pi
+Buildroot for Raspberry Pi
 ==========================
 
 This buildroot fork will produce a very light-weight and trimmed down
