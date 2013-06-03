@@ -4,12 +4,11 @@
 #
 #############################################################
 
-QT5BASE_VERSION = de3d449dcff4ee00fea72b3697055f5459fb13ec
-QT5BASE_SITE = git://gitorious.org/qt/qtbase.git
-QT5BASE_SITE_METHOD = git
+QT5BASE_VERSION = $(QT5_VERSION)
+QT5BASE_SITE = $(QT5_SITE)
+QT5BASE_SOURCE = qtbase-opensource-src-$(QT5BASE_VERSION).tar.xz
 
 QT5BASE_DEPENDENCIES = host-pkgconf zlib pcre
-
 QT5BASE_INSTALL_STAGING = YES
 
 # A few comments:
