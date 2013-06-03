@@ -4,12 +4,10 @@
 #
 #############################################################
 
-QT5SVG_VERSION = 0b7bb2bd2d7404c42dd782975b665c9415409e0c
-QT5SVG_SITE = git://gitorious.org/qt/qtsvg.git
-QT5SVG_SITE_METHOD = git
-
+QT5SVG_VERSION = $(QT5_VERSION)
+QT5SVG_SITE = $(QT5_SITE)
+QT5SVG_SOURCE = qtsvg-opensource-src-$(QT5SVG_VERSION).tar.xz
 QT5SVG_DEPENDENCIES = qt5base
-
 QT5SVG_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_QT5BASE_LICENSE_APPROVED),y)

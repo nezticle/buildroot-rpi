@@ -1,24 +1,19 @@
---- a/Source/WebCore/Target.pri	2013-05-31 14:31:50.315965619 +0200
-+++ b/Source/WebCore/Target.pri	2013-05-31 14:33:37.035964069 +0200
-@@ -4104,7 +4104,12 @@
+--- a/Source/WebCore/Target.pri	2013-05-16 16:33:50.000000000 +0200
++++ b/Source/WebCore/Target.pri	2013-05-16 16:28:05.000000000 +0200
+@@ -4101,6 +4101,11 @@
      have?(XCOMPOSITE) {
          SOURCES += platform/graphics/surfaces/qt/GraphicsSurfaceGLX.cpp
      }
--}
 +
 +    contains(QT_CONFIG, opengles2) {
 +        SOURCES -= platform/graphics/surfaces/qt/GraphicsSurfaceGLX.cpp
 +        SOURCES += platform/graphics/surfaces/qt/GraphicsSurfaceGL_NoX.cpp
 +    }
-+} 
+ }
  
  build?(qttestsupport) {
-     HEADERS += platform/qt/QtTestSupport.h
-
- build?(qttestsupport) {
-
---- a/Source/WebCore/platform/graphics/OpenGLShims.cpp	2013-05-31 14:35:37.275958837 +0200
-+++ b/Source/WebCore/platform/graphics/OpenGLShims.cpp	2013-05-31 14:36:45.779955070 +0200
+--- a/Source/WebCore/platform/graphics/OpenGLShims.cpp	2013-04-09 02:11:44.000000000 +0200
++++ b/Source/WebCore/platform/graphics/OpenGLShims.cpp	2013-05-16 16:29:17.000000000 +0200
 @@ -40,7 +40,10 @@
  #if PLATFORM(QT)
  static void* getProcAddress(const char* procName)
@@ -31,16 +26,15 @@
  }
  #else
  typedef void* (*glGetProcAddressType) (const char* procName);
-
---- a/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp	2013-05-31 14:39:48.179947750 +0200
-+++ b/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp	2013-05-31 14:38:41.523948296 +0200
-@@ -388,11 +388,13 @@
+--- a/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp	2013-04-09 02:11:44.000000000 +0200
++++ b/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp	2013-05-16 16:18:08.000000000 +0200
+@@ -387,11 +387,13 @@
  {
      validateAttributes();
  
 +#if USE(GLX)
-     if (!m_private->m_surface || !m_private->m_platformContext) {
-         LOG_ERROR("GraphicsContext3D: GL context creation failed.");
+     if (!m_private->m_surface) {
+         LOG_ERROR("GraphicsContext3D: QGLWidget initialization failed.");
          m_private = nullptr;
          return;
      }
@@ -48,10 +42,9 @@
  
      static bool initialized = false;
      static bool success = true;
-
---- a/Source/WebCore/platform/graphics/surfaces/GraphicsSurfaceToken.h	2013-05-31 14:41:37.859947269 +0200
-+++ a/Source/WebCore/platform/graphics/surfaces/GraphicsSurfaceToken.h	2013-05-31 14:42:44.619942154 +0200
-@@ -55,6 +55,20 @@
+--- a/Source/WebCore/platform/graphics/surfaces/GraphicsSurfaceToken.h	2013-04-09 02:11:44.000000000 +0200
++++ b/Source/WebCore/platform/graphics/surfaces/GraphicsSurfaceToken.h	2013-05-16 16:30:46.000000000 +0200
+@@ -55,7 +55,20 @@
      {
          return frontBufferHandle;
      }
@@ -59,7 +52,7 @@
 +    GraphicsSurfaceToken(uint32_t windowID = 0)
 +        : frontBufferHandle(windowID)
 +    { }
-+ 
+ 
 +    bool operator!=(const GraphicsSurfaceToken &rhs) const
 +    {
 +        return frontBufferHandle != rhs.frontBufferHandle;
@@ -69,12 +62,12 @@
 +    {
 +        return frontBufferHandle;
 +    }
- 
  #endif
  
---- a/Tools/qmake/mkspecs/features/features.prf	2013-05-31 14:44:27.371936873 +0200
-+++ b/Tools/qmake/mkspecs/features/features.prf	2013-05-31 14:46:22.131931443 +0200
-@@ -142,6 +142,7 @@
+ #if OS(DARWIN) || OS(WINDOWS)
+--- a/Tools/qmake/mkspecs/features/features.prf	2013-04-09 02:11:53.000000000 +0200
++++ b/Tools/qmake/mkspecs/features/features.prf	2013-05-16 16:27:26.000000000 +0200
+@@ -139,6 +139,7 @@
          mac: WEBKIT_CONFIG += use_graphics_surface
          win32:contains(QT_CONFIG, opengles2): WEBKIT_CONFIG += use_graphics_surface
          linux-*:contains(WEBKIT_CONFIG, have_glx):contains(WEBKIT_CONFIG, have_xcomposite):contains(WEBKIT_CONFIG, have_xrender): WEBKIT_CONFIG += use_graphics_surface
@@ -352,10 +345,9 @@
 +#endif
 +}
 +#endif
-
---- a/Source/WebCore/WebCore.pri	2013-05-31 14:48:35.063928123 +0200
-+++ b/Source/WebCore/WebCore.pri	2013-05-31 14:49:44.987924199 +0200
-@@ -251,9 +251,11 @@
+--- a/Source/WebCore/WebCore.pri	2013-04-09 02:11:45.000000000 +0200
++++ b/Source/WebCore/WebCore.pri	2013-05-16 23:44:40.214612087 +0200
+@@ -227,9 +227,11 @@
  
  use?(GRAPHICS_SURFACE) {
      mac: LIBS += -framework IOSurface -framework CoreFoundation
@@ -369,3 +361,4 @@
 +        }
      }
  }
+ 
