@@ -12,11 +12,11 @@ Dependencies
 
 You will need to install some packages on your host machine, for e.g. on Ubuntu 12.04:
 
-	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev
+	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev bc
 
 For host machines with kernel 3.8 or higher (e.g. Ubuntu 13.04) you can use the experimental F2FS filesystem:
 
-	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev f2fs-tools
+	sudo apt-get install build-essential git subversion cvs unzip whois ncurses-dev bc f2fs-tools
 
 When creating a VM please allocate a minimal of 15GB disk space.
 
