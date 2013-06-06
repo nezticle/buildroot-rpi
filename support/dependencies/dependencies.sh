@@ -59,6 +59,11 @@ if ! which sed > /dev/null ; then
 	exit 1
 fi
 
+if ! which bc > /dev/null ; then
+	/bin/echo -e "\nYou must install 'bc' on your build machine\n"
+	exit 1
+fi
+
 # Check make
 MAKE=$(which make 2> /dev/null)
 if [ -z "$MAKE" ] ; then
