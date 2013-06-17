@@ -18,7 +18,7 @@ WAYLAND_DEPENDENCIES = libffi host-pkgconf expat host-expat
 # source code. By default, it builds it with CC, so it doesn't work with
 # cross-compilation. Therefore, we build it manually, and tell wayland
 # that the tool is already available.
-WAYLAND_CONF_OPT = --disable-scanner
+WAYLAND_CONF_OPT = --disable-scanner --disable-documentation
 
 ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
 WAYLAND_DEPENDENCIES += rpi-userland
