@@ -7,9 +7,6 @@
 WESTON_VERSION = 1.1.1
 WESTON_SITE = http://wayland.freedesktop.org/releases/
 WESTON_SOURCE = weston-$(WESTON_VERSION).tar.xz
-#WESTON_VERSION = 354aaa47c122aa246443ab10626c0c1acee2f3af
-#WESTON_SITE = http://cgit.collabora.com/git/user/pq/weston.git/snapshot/
-#WESTON_SOURCE = weston-$(WESTON_VERSION).tar.gz
 WESTON_AUTORECONF = YES
 WESTON_LICENSE = MIT
 WESTON_LICENSE_FILES = COPYING

@@ -1,9 +1,0 @@
---- ./configure.ac	2013-06-04 16:42:12.026483280 +0200
-+++ ./configure.ac	2013-06-04 16:41:12.914487863 +0200
-@@ -50,7 +50,7 @@
- AM_CONDITIONAL(ENABLE_EGL, test x$enable_egl = xyes)
- if test x$enable_egl = xyes; then
- 	AC_DEFINE([ENABLE_EGL], [1], [Build Weston with EGL support])
--	COMPOSITOR_MODULES="$COMPOSITOR_MODULES egl >= 7.10 glesv2"
-+	COMPOSITOR_MODULES="$COMPOSITOR_MODULES egl >= 1.0 glesv2"
- fi
