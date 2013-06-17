@@ -7,10 +7,7 @@
 WAYLAND_VERSION = 1.1.0
 WAYLAND_SITE = http://wayland.freedesktop.org/releases/
 WAYLAND_SOURCE = wayland-$(WAYLAND_VERSION).tar.xz
-#WAYLAND_VERSION = d68c7d8aed92158ae68fd9cabb8bc2a50fd5066b
-#WAYLAND_SITE = http://cgit.freedesktop.org/wayland/wayland/snapshot/
-#WAYLAND_SOURCE = wayland-$(WAYLAND_VERSION).tar.gz
-#WAYLAND_AUTORECONF = YES
+WAYLAND_AUTORECONF = YES
 WAYLAND_LICENSE = MIT
 WAYLAND_LICENSE_FILES = COPYING
 
