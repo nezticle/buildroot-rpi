@@ -1,0 +1,29 @@
+--- a/src/plugins/platforms/qwayland-brcm-egl/qwayland-brcm-egl.pro	2013-05-28 10:42:16.000000000 +0200
++++ b/src/plugins/platforms/qwayland-brcm-egl/qwayland-brcm-egl.pro	2013-05-31 16:09:38.641181417 +0200
+@@ -3,6 +3,11 @@
+ 
+ include(../wayland_common/wayland_common.pri)
+ 
++unix {
++    CONFIG += link_pkgconfig
++    PKGCONFIG += bcm_host
++}
++
+ LIBS += -lEGL
+ 
+ OTHER_FILES += \
+
+--- a/src/plugins/waylandcompositors/brcm-egl/brcm-egl.pro	2013-06-03 14:55:07.141786578 +0200
++++ b/src/plugins/waylandcompositors/brcm-egl/brcm-egl.pro	2013-06-03 14:55:04.385784951 +0200
+@@ -5,6 +5,11 @@
+ 
+ OTHER_FILES += wayland_egl.json
+ 
++unix {
++    CONFIG += link_pkgconfig
++    PKGCONFIG += bcm_host
++}
++
+ LIBS += -lEGL
+ 
+ SOURCES += \
