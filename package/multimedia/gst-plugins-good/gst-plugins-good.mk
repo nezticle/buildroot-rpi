@@ -3,7 +3,7 @@
 # gst-plugins-good
 #
 #############################################################
-GST_PLUGINS_GOOD_VERSION = b6cfa9c8b5205aaf38ad3479bb29dfc2d556ad5d
+GST_PLUGINS_GOOD_VERSION = 77dc07c9e1cbc8e7b8adc3c5f6afd060247201ce
 GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VERSION).tar.gz
 GST_PLUGINS_GOOD_SITE = http://cgit.freedesktop.org/gstreamer-sdk/gst-plugins-good/snapshot/
 GST_PLUGINS_GOOD_AUTORECONF = YES
