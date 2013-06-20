@@ -1,0 +1,25 @@
+--- a/kconfig/zconf.gperf	2013-01-31 21:07:52.000000000 +0100
++++ b/kconfig/zconf.gperf	2013-06-19 10:59:36.819660984 +0200
+@@ -6,6 +6,9 @@
+ %enum
+ %pic
+ %struct-type
++%{
++#include <stddef.h>
++%}
+ 
+ struct kconf_id;
+ 
+--- host-crosstool-ng-1.18.0.orig/Makefile.in	2013-01-31 21:07:52.000000000 +0100
++++ host-crosstool-ng-1.18.0/Makefile.in	2013-06-19 10:58:55.247659600 +0200
+@@ -348,8 +348,8 @@
+ install-lib-kconfig: $(DESTDIR)$(libdir) install-lib-main
+ 	@echo "  INST    'kconfig/'"
+ 	@mkdir -p "$(DESTDIR)$(libdir)/kconfig"
+-	@for f in $(KCONFIG_FILES); do                                      \
+-	    install "kconfig/$${f}" "$(DESTDIR)$(libdir)/kconfig/$${f}";    \
++	@for f in $(KCONFIG_FILES); do                                         \
++	    $(install) -D "kconfig/$${f}" "$(DESTDIR)$(libdir)/kconfig/$${f}"; \
+ 	 done
+ 
+ install-doc: $(DESTDIR)$(docdir)
