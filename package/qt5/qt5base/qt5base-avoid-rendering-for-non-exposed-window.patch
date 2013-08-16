@@ -1,0 +1,16 @@
+--- a/src/plugins/platforms/eglfs/qeglfsbackingstore.cpp
++++ b/src/plugins/platforms/eglfs/qeglfsbackingstore.cpp
+@@ -77,6 +77,13 @@
+     Q_UNUSED(region);
+     Q_UNUSED(offset);
+ 
++if ( window->isExposed() == false )
++{
++	//qWarning () << "Avoid rendering if the window has not (yet) been exposed";
++	return;
++}
++
++
+     makeCurrent();
+ 
+ #ifdef QEGL_EXTRA_DEBUG

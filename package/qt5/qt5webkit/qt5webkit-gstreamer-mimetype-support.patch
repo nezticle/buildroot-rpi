@@ -1,12 +1,6 @@
---- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-19 09:05:56.147061667 +0200
-+++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp	2013-05-19 09:44:53.059157300 +0200
-@@ -1947,102 +1947,131 @@
- 
- static HashSet<String> mimeTypeCache()
- {
-+
-     initializeGStreamerAndRegisterWebKitElements();
- 
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+@@ -1952,96 +1952,125 @@
      DEFINE_STATIC_LOCAL(HashSet<String>, cache, ());
      static bool typeListInitialized = false;
  
@@ -96,9 +90,6 @@
 -                               "video/x-mve",
 -                               "video/x-nuv",
 -                               "video/x-vcd"};
--
--    for (unsigned i = 0; i < (sizeof(mimeTypes) / sizeof(*mimeTypes)); ++i)
--        cache.add(String(mimeTypes[i]));
 +    if (!typeListInitialized) {
 +        // Build a whitelist of mime-types known to be supported by
 +        // GStreamer.
@@ -106,13 +97,15 @@
 +        handledApplicationSubtypes.add(String("ogg"));
 +        handledApplicationSubtypes.add(String("vnd.rn-realmedia"));
 +        handledApplicationSubtypes.add(String("x-pn-realaudio"));
-+
+ 
+-    for (unsigned i = 0; i < (sizeof(mimeTypes) / sizeof(*mimeTypes)); ++i)
+-        cache.add(String(mimeTypes[i]));
 +        GList* factories = gst_type_find_factory_get_list();
 +        for (GList* iterator = factories; iterator; iterator = iterator->next) {
 +            GstTypeFindFactory* factory = GST_TYPE_FIND_FACTORY(iterator->data);
 +            GstCaps* caps = gst_type_find_factory_get_caps(factory);
 +            gchar** extensions;
-+
+ 
 +            if (!caps)
 +                continue;
 +
@@ -217,8 +210,8 @@
 +        gst_plugin_feature_list_free(factories);
 +        typeListInitialized = true;
 +    }
- 
--    typeListInitialized = true;
++ 
+     typeListInitialized = true;
      return cache;
  }
- 
+

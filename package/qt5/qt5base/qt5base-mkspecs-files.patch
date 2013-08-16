@@ -1,17 +1,3 @@
-Add a Buildroot 'device' to ease cross-compilation
-
-Qt5 has a mechanism to support "device" profiles, so that people can
-specify the compiler, compiler flags and so on for a specific device.
-
-We leverage this mechanism in the Buildroot packaging of qt5 to
-simplify cross-compilation: we have our own "device" definition, which
-allows us to easily pass the cross-compiler paths and flags from our
-qt5.mk.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-
-Index: b/mkspecs/devices/linux-buildroot-g++/qmake.conf
-===================================================================
 --- /dev/null
 +++ b/mkspecs/devices/linux-buildroot-g++/qmake.conf
 @@ -0,0 +1,43 @@
@@ -58,8 +44,7 @@ Index: b/mkspecs/devices/linux-buildroot-g++/qmake.conf
 +deviceSanityCheckCompiler()
 +
 +load(qt_config)
-Index: b/mkspecs/devices/linux-buildroot-g++/qplatformdefs.h
-===================================================================
+
 --- /dev/null
 +++ b/mkspecs/devices/linux-buildroot-g++/qplatformdefs.h
 @@ -0,0 +1 @@
