@@ -4,7 +4,7 @@
 #
 #############################################################
 
-MLBROWSER_VERSION = e7bba1439ff9b38dfd36c6222e4825c5d17e7677
+MLBROWSER_VERSION = 0d8d1312c4fbedd087a4f1da1a3cb17e85a69478
 MLBROWSER_SITE_METHOD = git
 MLBROWSER_SITE = https://github.com/msieben/mlbrowser.git
 

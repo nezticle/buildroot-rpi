@@ -20,7 +20,7 @@ GST_OMX_CONF_OPT += \
 ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
 GST_OMX_DEPENDENCIES += gst-plugins-bad
 GST_OMX_CONF_OPT += --with-omx-target=rpi
-GST_OMX_CONF_ENV += CPPFLAGS="$(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include/IL -I$(STAGING_DIR)/usr/include/interface/vcos/pthreads -I$(STAGING_DIR)/usr/include/interface/vmcs_host/linux"
+GST_OMX_CONF_ENV += CPPFLAGS="$(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include/IL -I$(STAGING_DIR)/usr/include/interface/vcos/pthreads -I$(STAGING_DIR)/usr/include/interface/vmcs_host/linux -Wno-deprecated-declarations"
 endif
 
 define GST_OMX_UPDATE_CONF
