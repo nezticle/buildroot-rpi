@@ -1,4 +1,4 @@
-QT5WAYLAND_VERSION = e5601d283c4d9a5c43352b6f1acd0e1968a31b83
+QT5WAYLAND_VERSION = 11b0a7db584d21eb7eb94849de79ad033249ae3c
 QT5WAYLAND_SITE = git://gitorious.org/qt/qtwayland.git
 QT5WAYLAND_SITE_METHOD = git
 
@@ -8,9 +8,10 @@ QT5WAYLAND_INSTALL_STAGING = YES
 
 define QT5WAYLAND_CONFIGURE_CMDS
 	-[ -f $(@D)/Makefile ] && $(MAKE) -C $(@D) distclean
+	touch $(@D)/.git
 	(cd $(@D) && \
 		$(TARGET_MAKE_ENV) \
-		$(HOST_DIR)/usr/bin/qmake CONFIG+=wayland-compositor)
+		$(HOST_DIR)/usr/bin/qmake -r CONFIG+=wayland-compositor)
 endef
 
 define QT5WAYLAND_BUILD_CMDS
