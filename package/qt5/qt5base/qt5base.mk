@@ -100,6 +100,7 @@ QT5BASE_CONFIGURE_OPTS += -opengl es2 -eglfs
 QT5BASE_INSTALL_LIBS_y += Qt5OpenGL
 ifeq ($(BR2_PACKAGE_RPI_USERLAND),y)
 QT5BASE_CONFIGURE_OPTS += \
+	-openvg \
 	-no-neon \
 	-no-xinerama \
 	-no-xshape \

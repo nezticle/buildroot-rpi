@@ -1,0 +1,20 @@
+--- a/config.tests/unix/openvg/openvg.pro	2013-07-02 09:09:31.000000000 +0200
++++ b/config.tests/unix/openvg/openvg.pro	2013-08-18 13:02:11.895792567 +0200
+@@ -2,7 +2,7 @@
+ 
+ !isEmpty(QMAKE_INCDIR_OPENVG): INCLUDEPATH += $$QMAKE_INCDIR_OPENVG
+ !isEmpty(QMAKE_LIBDIR_OPENVG): LIBS += -L$$QMAKE_LIBDIR_OPENVG
+-!isEmpty(QMAKE_LIBS_OPENVG): LIBS += $$QMAKE_LIBS_OPENVG
++!isEmpty(QMAKE_LIBS_OPENVG): LIBS += $$QMAKE_LIBS_OPENVG $$QMAKE_LIBS_OPENGL_ES2
+ 
+ # Some OpenVG engines (e.g. ShivaVG) are implemented on top of OpenGL.
+ # Add the extra includes and libraries for that case.
+@@ -12,8 +12,4 @@
+     !isEmpty(QMAKE_LIBS_OPENGL): LIBS += $$QMAKE_LIBS_OPENGL
+ }
+ 
+-lower_case_includes {
+-    DEFINES += QT_LOWER_CASE_VG_INCLUDES
+-}
+-
+ CONFIG -= qt
