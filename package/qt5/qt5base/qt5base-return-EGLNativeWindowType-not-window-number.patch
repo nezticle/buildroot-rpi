@@ -1,0 +1,37 @@
+This patch is based on commit 071c48a5ff8842d43fcdc95db08b561d340a2bfd. It has been modified by Metrological.
+
+--- a/src/plugins/platforms/eglfs/qeglfswindow.cpp
++++ b/src/plugins/platforms/eglfs/qeglfswindow.cpp
+@@ -55,10 +55,8 @@ QEglFSWindow::QEglFSWindow(QWindow *w)
+     , m_window(0)
+     , has_window(false)
+ {
+-    static int serialNo = 0;
+-    m_winid  = ++serialNo;
+ #ifdef QEGL_EXTRA_DEBUG
+-    qWarning("QEglWindow %p: %p 0x%x\n", this, w, uint(m_winid));
++    qWarning("QEglWindow %p: %p 0x%x\n", this, w, uint(m_window));
+ #endif
+     w->setSurfaceType(QSurface::OpenGLSurface);
+ }
+@@ -144,7 +142,7 @@ void QEglFSWindow::setWindowState(Qt::WindowState)
+ 
+ WId QEglFSWindow::winId() const
+ {
+-    return m_winid;
++    return WId(m_window);
+ }
+ 
+ QSurfaceFormat QEglFSWindow::format() const
+
+--- a/src/plugins/platforms/eglfs/qeglfswindow.h
++++ b/src/plugins/platforms/eglfs/qeglfswindow.h
+@@ -73,7 +73,6 @@ protected:
+     EGLNativeWindowType m_window;
+ 
+ private:
+-    WId m_winid;
+     EGLConfig m_config;
+     QSurfaceFormat m_format;
+     bool has_window;
+

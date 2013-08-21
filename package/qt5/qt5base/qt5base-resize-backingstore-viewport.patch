@@ -1,0 +1,24 @@
+This patch is based on commit 87a30db468b187c9c667feefdb31a63028ee9fad. It has been modified by Metrological.
+
+--- a/src/plugins/platforms/eglfs/qeglfsbackingstore.cpp
++++ b/src/plugins/platforms/eglfs/qeglfsbackingstore.cpp
+@@ -86,6 +86,9 @@ void QEglFSBackingStore::flush(QWindow *window, const QRegion &region, const QPo
+ 
+     makeCurrent();
+ 
++    QRectF sr = window->screen()->geometry();
++    glViewport(0, 0, sr.width(), sr.height());
++
+ #ifdef QEGL_EXTRA_DEBUG
+     qWarning("QEglBackingStore::flush %p", window);
+ #endif
+@@ -127,7 +130,6 @@ void QEglFSBackingStore::flush(QWindow *window, const QRegion &region, const QPo
+     };
+ 
+     QRectF r = window->geometry();
+-    QRectF sr = window->screen()->geometry();
+ 
+     GLfloat x1 = (r.left() / sr.width()) * 2 - 1;
+     GLfloat x2 = (r.right() / sr.width()) * 2 - 1;
+
+

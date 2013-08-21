@@ -1,0 +1,49 @@
+This patch is based on commit 9fabb548daed933a54d24871eade9f60f9c2ae55. It has been modified by Metrological.
+
+--- a/src/plugins/platforms/eglfs/qeglfsbackingstore.cpp
++++ b/src/plugins/platforms/eglfs/qeglfsbackingstore.cpp
+@@ -199,8 +199,6 @@ void QEglFSBackingStore::flush(QWindow *window, const QRegion &region, const QPo
+ 
+ void QEglFSBackingStore::makeCurrent()
+ {
+-    // needed to prevent QOpenGLContext::makeCurrent() from failing
+-    window()->setSurfaceType(QSurface::OpenGLSurface);
+     (static_cast<QEglFSWindow *>(window()->handle()))->create();
+     m_context->makeCurrent(window());
+ }
+
+--- a/src/plugins/platforms/eglfs/qeglfswindow.cpp
++++ b/src/plugins/platforms/eglfs/qeglfswindow.cpp
+@@ -60,6 +60,7 @@ QEglFSWindow::QEglFSWindow(QWindow *w)
+ #ifdef QEGL_EXTRA_DEBUG
+     qWarning("QEglWindow %p: %p 0x%x\n", this, w, uint(m_winid));
+ #endif
++    w->setSurfaceType(QSurface::OpenGLSurface);
+ }
+ 
+ QEglFSWindow::~QEglFSWindow()
+
+--- a/src/plugins/platforms/minimalegl/qminimaleglbackingstore.cpp
++++ b/src/plugins/platforms/minimalegl/qminimaleglbackingstore.cpp
+@@ -80,9 +80,6 @@ void QMinimalEglBackingStore::flush(QWindow *window, const QRegion &region, cons
+ 
+ void QMinimalEglBackingStore::beginPaint(const QRegion &)
+ {
+-    // needed to prevent QOpenGLContext::makeCurrent() from failing
+-    window()->setSurfaceType(QSurface::OpenGLSurface);
+-
+     m_context->makeCurrent(window());
+     m_device = new QOpenGLPaintDevice(window()->size());
+ }
+
+--- a/src/plugins/platforms/minimalegl/qminimaleglwindow.cpp
++++ b/src/plugins/platforms/minimalegl/qminimaleglwindow.cpp
+@@ -58,6 +58,7 @@ QMinimalEglWindow::QMinimalEglWindow(QWindow *w)
+     if (w->geometry() != screenGeometry) {
+         QWindowSystemInterface::handleGeometryChange(w, screenGeometry);
+     }
++    w->setSurfaceType(QSurface::OpenGLSurface);
+ }
+ 
+ void QMinimalEglWindow::setGeometry(const QRect &)
+

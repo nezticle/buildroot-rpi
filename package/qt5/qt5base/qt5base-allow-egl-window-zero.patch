@@ -1,0 +1,72 @@
+This patch is based on commit c837dbecdd9ab6707798cd26ae7979063eb8d93b. It has been modified by Metrological.
+
+--- a/src/plugins/platforms/eglfs/qeglfswindow.cpp
++++ b/src/plugins/platforms/eglfs/qeglfswindow.cpp
+@@ -53,6 +53,7 @@ QEglFSWindow::QEglFSWindow(QWindow *w)
+     : QPlatformWindow(w)
+     , m_surface(0)
+     , m_window(0)
++    , has_window(false)
+ {
+     static int serialNo = 0;
+     m_winid  = ++serialNo;
+@@ -68,7 +71,7 @@ QEglFSWindow::~QEglFSWindow()
+ 
+ void QEglFSWindow::create()
+ {
+-    if (m_window)
++    if (has_window)
+         return;
+ 
+     setWindowState(Qt::WindowFullScreen);
+@@ -90,7 +91,7 @@ void QEglFSWindow::create()
+ void QEglFSWindow::invalidateSurface()
+ {
+     // Native surface has been deleted behind our backs
+-    m_window = 0;
++    has_window = false;
+     if (m_surface != 0) {
+         EGLDisplay display = (static_cast<QEglFSScreen *>(window()->screen()->handle()))->display();
+         eglDestroySurface(display, m_surface);
+@@ -103,6 +104,7 @@ void QEglFSWindow::resetSurface()
+     EGLDisplay display = static_cast<QEglFSScreen *>(screen())->display();
+ 
+     m_window = QEglFSHooks::hooks()->createNativeWindow(QEglFSHooks::hooks()->screenSize(), m_format);
++    has_window = true;
+     m_surface = eglCreateWindowSurface(display, m_config, m_window, NULL);
+     if (m_surface == EGL_NO_SURFACE) {
+         EGLint error = eglGetError();
+@@ -119,9 +121,9 @@ void QEglFSWindow::destroy()
+         m_surface = 0;
+     }
+ 
+-    if (m_window) {
++    if (has_window) {
+         QEglFSHooks::hooks()->destroyNativeWindow(m_window);
+-        m_window = 0;
++        has_window = false;
+     }
+ }
+ 
+--- a/src/plugins/platforms/eglfs/qeglfswindow.h
++++ b/src/plugins/platforms/eglfs/qeglfswindow.h
+@@ -76,6 +76,7 @@ private:
+     WId m_winid;
+     EGLConfig m_config;
+     QSurfaceFormat m_format;
++    bool has_window;
+ };
+ QT_END_NAMESPACE
+ #endif // QEGLFSWINDOW_H
+
+--- a/src/gui/kernel/qwindow.cpp	2013-07-02 09:09:53.000000000 +0200
++++ b/src/gui/kernel/qwindow.cpp	2013-08-20 11:28:24.693609483 +0200
+@@ -503,7 +503,7 @@
+ 
+     WId id = d->platformWindow->winId();
+     // See the QPlatformWindow::winId() documentation
+-    Q_ASSERT(id != WId(0));
++//    Q_ASSERT(id != WId(0));
+     return id;
+ }
+
