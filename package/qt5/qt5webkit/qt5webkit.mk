@@ -33,7 +33,6 @@ define QT5WEBKIT_CONFIGURE_CMDS
 		$(HOST_DIR)/usr/bin/qmake \
 			WEBKIT_CONFIG-=svg \
 			WEBKIT_CONFIG+=accelerated_2d_canvas \
-			WEBKIT_CONFIG+=graphics_surface \
 			CONFIG+=release \
 			$(DEBUG_CONFIG)\
 			DEFINES+=_GSTREAMER_QOS_ \
