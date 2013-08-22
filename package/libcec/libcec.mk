@@ -3,7 +3,7 @@
 # libcec
 #
 #############################################################
-LIBCEC_VERSION = 93efea2abf014deb8e64a74ec1ff21486def4ae3
+LIBCEC_VERSION = 3befc9811e59359c014c33c1276f869d5b59ac09
 LIBCEC_SITE = git://github.com/Pulse-Eight/libcec.git
 LIBCEC_INSTALL_STAGING = YES
 LIBCEC_INSTALL_TARGET = YES
