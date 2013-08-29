@@ -4,7 +4,7 @@
 #
 #############################################################
 
-QT5WEBKIT_VERSION = $(QT5_VERSION)
+QT5WEBKIT_VERSION = 5.0.2
 QT5WEBKIT_SITE = $(QT5_SITE)
 QT5WEBKIT_SOURCE = qtwebkit-opensource-src-$(QT5WEBKIT_VERSION).tar.xz
 QT5WEBKIT_DEPENDENCIES = qt5base qt5declarative sqlite host-ruby host-gperf
@@ -29,10 +29,10 @@ endif
 
 define QT5WEBKIT_CONFIGURE_CMDS
 	(cd $(@D); \
+		touch .git; \
 		$(TARGET_MAKE_ENV) \
 		$(HOST_DIR)/usr/bin/qmake \
 			WEBKIT_CONFIG-=svg \
-			WEBKIT_CONFIG+=accelerated_2d_canvas \
 			CONFIG+=release \
 			$(DEBUG_CONFIG)\
 			DEFINES+=_GSTREAMER_QOS_ \

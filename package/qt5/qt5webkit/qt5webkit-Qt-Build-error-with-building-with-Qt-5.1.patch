@@ -1,0 +1,51 @@
+From 4571a91db39491b97f9d42affb996406c8c3c5f8 Mon Sep 17 00:00:00 2001
+From: Allan Sandfeld Jensen <allan.jensen@digia.com>
+Date: Fri, 15 Mar 2013 13:36:33 +0100
+Subject: [PATCH] [Qt] Build error with building with Qt 5.1
+
+https://bugs.webkit.org/show_bug.cgi?id=112435
+
+Reviewed by Noam Rosenthal.
+
+QAccessibleWidget has moved to private.
+
+git-svn-id: http://svn.webkit.org/repository/webkit/trunk@145899 268f45cc-cd09-0410-ab3c-d52691b4dbfc
+Change-Id: I9a81337a1765682556af34ac7d4a5b1c0c350216
+Reviewed-by: Friedemann Kleint <Friedemann.Kleint@digia.com>
+---
+ Source/WebKit/qt/WidgetApi/qwebviewaccessible_p.h | 4 ++++
+ Source/widgetsapi.pri                             | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Source/WebKit/qt/WidgetApi/qwebviewaccessible_p.h b/Source/WebKit/qt/WidgetApi/qwebviewaccessible_p.h
+index 7cbf448..a17b29e 100644
+--- a/Source/WebKit/qt/WidgetApi/qwebviewaccessible_p.h
++++ b/Source/WebKit/qt/WidgetApi/qwebviewaccessible_p.h
+@@ -22,7 +22,11 @@
+ 
+ #include <qaccessible.h>
+ #include <qaccessibleobject.h>
++#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
++#include <private/qaccessiblewidget_p.h>
++#else
+ #include <qaccessiblewidget.h>
++#endif
+ 
+ class QWebFrame;
+ class QWebPage;
+diff --git a/Source/widgetsapi.pri b/Source/widgetsapi.pri
+index b54bc1d..96db915 100644
+--- a/Source/widgetsapi.pri
++++ b/Source/widgetsapi.pri
+@@ -33,7 +33,7 @@ contains(CONFIG, texmap): DEFINES += WTF_USE_TEXTURE_MAPPER=1
+ 
+ use?(PLUGIN_BACKEND_XLIB): PKGCONFIG += x11
+ 
+-QT += network widgets
++QT += network widgets widgets-private
+ have?(QTQUICK): QT += quick
+ have?(QTPRINTSUPPORT): QT += printsupport
+ 
+-- 
+1.8.1.2
+

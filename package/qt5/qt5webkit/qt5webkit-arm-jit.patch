@@ -1,5 +1,5 @@
---- a/Source/WTF/wtf/Platform.h
-+++ b/Source/WTF/wtf/Platform.h
+--- a/Source/WTF/wtf/Platform.h	2013-04-09 02:11:36.000000000 +0200
++++ b/Source/WTF/wtf/Platform.h	2013-05-13 14:10:36.641057442 +0200
 @@ -170,6 +170,7 @@
  #define WTF_CPU_ARM 1
  
@@ -8,12 +8,12 @@
  #define WTF_CPU_ARM_HARDFP 1
  #endif
  
-@@ -936,7 +937,7 @@
+@@ -942,7 +943,7 @@
  #endif
  /* Enable the DFG JIT on ARM. */
  #if CPU(ARM_TRADITIONAL)
 -#define ENABLE_DFG_JIT 1
 +#define ENABLE_DFG_JIT 0
  #endif
- /* Enable the DFG JIT on MIPS. */
- #if CPU(MIPS)
+ #endif
+ 
